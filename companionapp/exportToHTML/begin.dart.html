@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>begin.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+begin.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'loginpage.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'signup.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">BeginPage </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s3">const </span><span class="s0">BeginPage</span><span class="s2">({</span><span class="s0">Key</span><span class="s2">? </span><span class="s0">key</span><span class="s2">}) : </span><span class="s3">super</span><span class="s2">(</span><span class="s0">key</span><span class="s2">: </span><span class="s0">key</span><span class="s2">);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">_BeginPageState createState</span><span class="s2">() =&gt; </span><span class="s0">_BeginPageState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_BeginPageState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">BeginPage</span><span class="s2">&gt; {</span>
+  <span class="s0">Color loginBorderColor </span><span class="s2">= </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!;</span>
+  <span class="s0">Color signUpBorderColor </span><span class="s2">= </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!;</span>
+  <span class="s0">Color selectedColor </span><span class="s2">= </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">;</span>
+  <span class="s0">double buttonWidth </span><span class="s2">= </span><span class="s4">200.0</span><span class="s2">; </span><span class="s5">// Set the width for both buttons</span>
+
+  <span class="s3">void </span><span class="s0">selectOption</span><span class="s2">(</span><span class="s0">bool isLogin</span><span class="s2">) {</span>
+    <span class="s0">setState</span><span class="s2">(() {</span>
+      <span class="s0">loginBorderColor </span><span class="s2">= </span><span class="s0">isLogin </span><span class="s2">? </span><span class="s0">selectedColor </span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!;</span>
+      <span class="s0">signUpBorderColor </span><span class="s2">= </span><span class="s0">isLogin </span><span class="s2">? </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]! : </span><span class="s0">selectedColor</span><span class="s2">;</span>
+    <span class="s2">});</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">Stack</span><span class="s2">(</span>
+        <span class="s0">children</span><span class="s2">: [</span>
+          <span class="s5">// Background Image</span>
+          <span class="s0">Image</span><span class="s2">.</span><span class="s0">asset</span><span class="s2">(</span>
+            <span class="s1">'assets/images/leafybg.jpg'</span><span class="s2">,</span>
+            <span class="s0">fit</span><span class="s2">: </span><span class="s0">BoxFit</span><span class="s2">.</span><span class="s0">cover</span><span class="s2">,</span>
+            <span class="s0">width</span><span class="s2">: </span><span class="s0">double</span><span class="s2">.</span><span class="s0">infinity</span><span class="s2">,</span>
+            <span class="s0">height</span><span class="s2">: </span><span class="s0">double</span><span class="s2">.</span><span class="s0">infinity</span><span class="s2">,</span>
+          <span class="s2">),</span>
+          <span class="s5">// Centered Column for Buttons</span>
+          <span class="s0">Center</span><span class="s2">(</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+              <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+              <span class="s0">children</span><span class="s2">: [</span>
+                <span class="s0">GestureDetector</span><span class="s2">(</span>
+                  <span class="s0">onTap</span><span class="s2">: () {</span>
+                    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span><span class="s0">context</span><span class="s2">,</span>
+                        <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">LoginPage</span><span class="s2">()));</span>
+                  <span class="s2">},</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Container</span><span class="s2">(</span>
+                    <span class="s0">width</span><span class="s2">: </span><span class="s0">buttonWidth</span><span class="s2">, </span><span class="s5">// Set the width of the container</span>
+                    <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">20</span><span class="s2">),</span>
+                    <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+                      <span class="s0">border</span><span class="s2">: </span><span class="s0">Border</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span>
+                        <span class="s0">color</span><span class="s2">: </span><span class="s0">loginBorderColor</span><span class="s2">,</span>
+                        <span class="s0">width</span><span class="s2">: </span><span class="s4">2.0</span><span class="s2">,</span>
+                      <span class="s2">),</span>
+                      <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">10</span><span class="s2">),</span>
+                      <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">.</span><span class="s0">withOpacity</span><span class="s2">(</span><span class="s4">0.8</span><span class="s2">), </span><span class="s5">// Add background color with opacity</span>
+                    <span class="s2">),</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                      <span class="s1">'LogIn'</span><span class="s2">,</span>
+                      <span class="s0">textAlign</span><span class="s2">: </span><span class="s0">TextAlign</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+                      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                        <span class="s0">color</span><span class="s2">: </span><span class="s0">loginBorderColor </span><span class="s2">== </span><span class="s0">selectedColor</span>
+                            <span class="s2">? </span><span class="s0">selectedColor</span>
+                            <span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">,</span>
+                        <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">18</span><span class="s2">,</span>
+                      <span class="s2">),</span>
+                    <span class="s2">),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20</span><span class="s2">),</span>
+                <span class="s0">GestureDetector</span><span class="s2">(</span>
+                  <span class="s0">onTap</span><span class="s2">: () {</span>
+                    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                        <span class="s0">context</span><span class="s2">, </span><span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">SignUp</span><span class="s2">()));</span>
+                  <span class="s2">},</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Container</span><span class="s2">(</span>
+                    <span class="s0">width</span><span class="s2">: </span><span class="s0">buttonWidth</span><span class="s2">, </span><span class="s5">// Set the width of the container</span>
+                    <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">20</span><span class="s2">),</span>
+                    <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+                      <span class="s0">border</span><span class="s2">: </span><span class="s0">Border</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span>
+                        <span class="s0">color</span><span class="s2">: </span><span class="s0">signUpBorderColor</span><span class="s2">,</span>
+                        <span class="s0">width</span><span class="s2">: </span><span class="s4">2.0</span><span class="s2">,</span>
+                      <span class="s2">),</span>
+                      <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">10</span><span class="s2">),</span>
+                      <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">.</span><span class="s0">withOpacity</span><span class="s2">(</span><span class="s4">0.8</span><span class="s2">), </span><span class="s5">// Add background color with opacity</span>
+                    <span class="s2">),</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                      <span class="s1">'Sign Up'</span><span class="s2">,</span>
+                      <span class="s0">textAlign</span><span class="s2">: </span><span class="s0">TextAlign</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+                      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                        <span class="s0">color</span><span class="s2">: </span><span class="s0">signUpBorderColor </span><span class="s2">== </span><span class="s0">selectedColor</span>
+                            <span class="s2">? </span><span class="s0">selectedColor</span>
+                            <span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">,</span>
+                        <span class="s0">fontSize</span><span class="s2">: </span><span class="s4">18</span><span class="s2">,</span>
+                      <span class="s2">),</span>
+                    <span class="s2">),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+              <span class="s2">],</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">],</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+
+</pre>
+</body>
+</html>

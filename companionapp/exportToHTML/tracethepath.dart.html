@@ -1,0 +1,378 @@
+<html>
+<head>
+<title>tracethepath.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+tracethepath.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'dart:async'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'dart:math'</span><span class="s2">;</span>
+
+<span class="s3">void </span><span class="s0">main</span><span class="s2">() {</span>
+  <span class="s0">runApp</span><span class="s2">(</span><span class="s0">TraceThePath</span><span class="s2">());</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">TraceThePath </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s0">@override</span>
+  <span class="s0">_TraceThePath createState</span><span class="s2">() =&gt; </span><span class="s0">_TraceThePath</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_TraceThePath </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">TraceThePath</span><span class="s2">&gt; {</span>
+  <span class="s0">Path _figurePath </span><span class="s2">= </span><span class="s0">Path</span><span class="s2">(); </span><span class="s4">// Path for the figure</span>
+  <span class="s0">Path _currentPath </span><span class="s2">= </span><span class="s0">Path</span><span class="s2">(); </span><span class="s4">// Path for the user's tracing</span>
+  <span class="s0">bool _isTracing </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+  <span class="s0">bool _gameOver </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+  <span class="s0">int _level </span><span class="s2">= </span><span class="s5">1</span><span class="s2">;</span>
+  <span class="s0">Timer</span><span class="s2">? </span><span class="s0">_timer</span><span class="s2">;</span>
+  <span class="s0">int _secondsLeft </span><span class="s2">= </span><span class="s5">60</span><span class="s2">; </span><span class="s4">// Change as needed</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">initState</span><span class="s2">() {</span>
+    <span class="s3">super</span><span class="s2">.</span><span class="s0">initState</span><span class="s2">();</span>
+    <span class="s0">startTimer</span><span class="s2">();</span>
+    <span class="s0">_figurePath </span><span class="s2">= </span><span class="s0">_generateFigure</span><span class="s2">(</span><span class="s0">_level</span><span class="s2">); </span><span class="s4">// Generate the figure path</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">dispose</span><span class="s2">() {</span>
+    <span class="s0">_timer</span><span class="s2">?.</span><span class="s0">cancel</span><span class="s2">();</span>
+    <span class="s3">super</span><span class="s2">.</span><span class="s0">dispose</span><span class="s2">();</span>
+  <span class="s2">}</span>
+
+  <span class="s3">void </span><span class="s0">startTimer</span><span class="s2">() {</span>
+    <span class="s0">_timer </span><span class="s2">= </span><span class="s0">Timer</span><span class="s2">.</span><span class="s0">periodic</span><span class="s2">(</span><span class="s0">Duration</span><span class="s2">(</span><span class="s0">seconds</span><span class="s2">: </span><span class="s5">1</span><span class="s2">), (</span><span class="s0">timer</span><span class="s2">) {</span>
+      <span class="s3">if </span><span class="s2">(</span><span class="s0">_secondsLeft </span><span class="s2">&gt; </span><span class="s5">0</span><span class="s2">) {</span>
+        <span class="s0">setState</span><span class="s2">(() {</span>
+          <span class="s0">_secondsLeft</span><span class="s2">--;</span>
+        <span class="s2">});</span>
+      <span class="s2">} </span><span class="s3">else </span><span class="s2">{</span>
+        <span class="s0">timer</span><span class="s2">.</span><span class="s0">cancel</span><span class="s2">();</span>
+        <span class="s0">gameOver</span><span class="s2">();</span>
+      <span class="s2">}</span>
+    <span class="s2">});</span>
+  <span class="s2">}</span>
+
+  <span class="s3">void </span><span class="s0">gameOver</span><span class="s2">() {</span>
+    <span class="s0">setState</span><span class="s2">(() {</span>
+      <span class="s0">_gameOver </span><span class="s2">= </span><span class="s3">true</span><span class="s2">;</span>
+    <span class="s2">});</span>
+    <span class="s4">// Add logic for displaying &quot;Game Over&quot; screen or transitioning to results</span>
+  <span class="s2">}</span>
+
+  <span class="s3">void </span><span class="s0">resetGame</span><span class="s2">() {</span>
+    <span class="s0">setState</span><span class="s2">(() {</span>
+      <span class="s0">_currentPath </span><span class="s2">= </span><span class="s0">Path</span><span class="s2">(); </span><span class="s4">// Clear the user's tracing path</span>
+      <span class="s0">_isTracing </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+      <span class="s0">_gameOver </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+      <span class="s0">_secondsLeft </span><span class="s2">= </span><span class="s5">60</span><span class="s2">; </span><span class="s4">// Reset timer</span>
+      <span class="s0">_level </span><span class="s2">= </span><span class="s5">1</span><span class="s2">;</span>
+      <span class="s0">_figurePath </span><span class="s2">= </span><span class="s0">_generateFigure</span><span class="s2">(</span><span class="s0">_level</span><span class="s2">); </span><span class="s4">// Generate the new figure path</span>
+    <span class="s2">});</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">MaterialApp</span><span class="s2">(</span>
+      <span class="s0">home</span><span class="s2">: </span><span class="s0">Scaffold</span><span class="s2">(</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s5">900</span><span class="s2">],</span>
+        <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+          <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">200</span><span class="s2">],</span>
+          <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Trace the Symbol - Level </span><span class="s2">$</span><span class="s0">_level</span><span class="s1">'</span><span class="s2">),</span>
+          <span class="s0">actions</span><span class="s2">: [</span>
+            <span class="s0">IconButton</span><span class="s2">(</span>
+              <span class="s0">icon</span><span class="s2">: </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">refresh</span><span class="s2">),</span>
+              <span class="s0">onPressed</span><span class="s2">: </span><span class="s0">resetGame</span><span class="s2">,</span>
+            <span class="s2">),</span>
+            <span class="s0">IconButton</span><span class="s2">(</span>
+              <span class="s0">icon</span><span class="s2">: </span><span class="s0">Icon</span><span class="s2">(</span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">info</span><span class="s2">),</span>
+              <span class="s0">onPressed</span><span class="s2">: () {</span>
+                <span class="s4">// Show instructions popup</span>
+                <span class="s0">showDialog</span><span class="s2">(</span>
+                  <span class="s0">context</span><span class="s2">: </span><span class="s0">context</span><span class="s2">,</span>
+                  <span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">)=&gt;</span><span class="s0">AlertDialog</span><span class="s2">(</span>
+                    <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">200</span><span class="s2">], </span><span class="s4">// Set background color</span>
+                    <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Instructions'</span><span class="s2">),</span>
+                    <span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                        <span class="s1">'Trace the symbol without lifting your finger. '</span>
+                            <span class="s1">'Complete each level within the time limit to advance to the next level.'</span>
+                    <span class="s2">),</span>
+                    <span class="s0">actions</span><span class="s2">: [</span>
+                      <span class="s0">TextButton</span><span class="s2">(</span>
+                        <span class="s0">onPressed</span><span class="s2">: () =&gt; </span><span class="s0">Navigator</span><span class="s2">.</span><span class="s0">pop</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+                        <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'OK'</span><span class="s2">),</span>
+                      <span class="s2">),</span>
+                    <span class="s2">],</span>
+                  <span class="s2">),</span>
+                <span class="s2">);</span>
+              <span class="s2">},</span>
+            <span class="s2">),</span>
+          <span class="s2">],</span>
+          <span class="s0">bottom</span><span class="s2">: </span><span class="s0">PreferredSize</span><span class="s2">(</span>
+            <span class="s0">preferredSize</span><span class="s2">: </span><span class="s0">Size</span><span class="s2">.</span><span class="s0">fromHeight</span><span class="s2">(</span><span class="s5">40.0</span><span class="s2">), </span><span class="s4">// Set the height of the PreferredSize</span>
+            <span class="s0">child</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+              <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'Time left: </span><span class="s2">$</span><span class="s0">_secondsLeft</span><span class="s1">'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                  <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">,</span>
+                  <span class="s0">fontSize</span><span class="s2">: </span><span class="s5">20.0</span><span class="s2">,</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">body</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Stack</span><span class="s2">(</span>
+            <span class="s0">children</span><span class="s2">: [</span>
+              <span class="s4">// Symbol drawing</span>
+              <span class="s0">CustomPaint</span><span class="s2">(</span>
+                <span class="s0">size</span><span class="s2">: </span><span class="s0">Size</span><span class="s2">(</span><span class="s0">MediaQuery</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">size</span><span class="s2">.</span><span class="s0">width </span><span class="s2">* </span><span class="s5">0.8</span><span class="s2">, </span><span class="s0">MediaQuery</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">size</span><span class="s2">.</span><span class="s0">height </span><span class="s2">* </span><span class="s5">0.5</span><span class="s2">),</span>
+                <span class="s0">painter</span><span class="s2">: </span><span class="s0">SymbolPainter</span><span class="s2">(</span><span class="s0">symbolPath</span><span class="s2">: </span><span class="s0">_figurePath</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s4">// Tracing area with instructions</span>
+              <span class="s0">Positioned</span><span class="s2">(</span>
+                <span class="s0">bottom</span><span class="s2">: </span><span class="s5">20</span><span class="s2">,</span>
+                <span class="s0">left</span><span class="s2">: </span><span class="s5">0</span><span class="s2">,</span>
+                <span class="s0">right</span><span class="s2">: </span><span class="s5">0</span><span class="s2">,</span>
+                <span class="s0">child</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                    <span class="s1">'Trace the symbol without lifting your finger.'</span><span class="s2">,</span>
+                    <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">18.0</span><span class="s2">,</span>
+                      <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                    <span class="s2">),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">GestureDetector</span><span class="s2">(</span>
+                <span class="s0">onPanStart</span><span class="s2">: (</span><span class="s0">details</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s3">if </span><span class="s2">(</span><span class="s0">_gameOver</span><span class="s2">) </span><span class="s3">return</span><span class="s2">;</span>
+                    <span class="s0">_isTracing </span><span class="s2">= </span><span class="s3">true</span><span class="s2">;</span>
+                    <span class="s0">_currentPath </span><span class="s2">= </span><span class="s0">Path</span><span class="s2">(); </span><span class="s4">// Clear the user's tracing path</span>
+                    <span class="s0">_currentPath</span><span class="s2">.</span><span class="s0">moveTo</span><span class="s2">(</span><span class="s0">details</span><span class="s2">.</span><span class="s0">localPosition</span><span class="s2">.</span><span class="s0">dx</span><span class="s2">, </span><span class="s0">details</span><span class="s2">.</span><span class="s0">localPosition</span><span class="s2">.</span><span class="s0">dy</span><span class="s2">);</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">onPanUpdate</span><span class="s2">: (</span><span class="s0">details</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s3">if </span><span class="s2">(</span><span class="s0">_gameOver</span><span class="s2">) </span><span class="s3">return</span><span class="s2">;</span>
+                    <span class="s0">_currentPath</span><span class="s2">.</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s0">details</span><span class="s2">.</span><span class="s0">localPosition</span><span class="s2">.</span><span class="s0">dx</span><span class="s2">, </span><span class="s0">details</span><span class="s2">.</span><span class="s0">localPosition</span><span class="s2">.</span><span class="s0">dy</span><span class="s2">);</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">onPanEnd</span><span class="s2">: (</span><span class="s0">details</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_isTracing </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+                    <span class="s3">if </span><span class="s2">(!</span><span class="s0">_gameOver </span><span class="s2">&amp;&amp; </span><span class="s0">_checkWinCondition</span><span class="s2">()) {</span>
+                      <span class="s0">_level</span><span class="s2">++;</span>
+                      <span class="s3">if </span><span class="s2">(</span><span class="s0">_level </span><span class="s2">&lt;= </span><span class="s5">3</span><span class="s2">) {</span>
+                        <span class="s0">_figurePath </span><span class="s2">= </span><span class="s0">_generateFigure</span><span class="s2">(</span><span class="s0">_level</span><span class="s2">); </span><span class="s4">// Generate the new figure path</span>
+                        <span class="s0">_secondsLeft </span><span class="s2">= </span><span class="s5">60</span><span class="s2">; </span><span class="s4">// Reset timer for the next level</span>
+                        <span class="s0">startTimer</span><span class="s2">(); </span><span class="s4">// Start timer for the next level</span>
+                      <span class="s2">} </span><span class="s3">else </span><span class="s2">{</span>
+                        <span class="s4">// Game completed</span>
+                        <span class="s0">gameOver</span><span class="s2">();</span>
+                        <span class="s4">// Add logic to display</span>
+                      <span class="s2">}</span>
+                    <span class="s2">}</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">child</span><span class="s2">: </span><span class="s0">Container</span><span class="s2">(</span>
+                  <span class="s0">width</span><span class="s2">: </span><span class="s0">MediaQuery</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">size</span><span class="s2">.</span><span class="s0">width </span><span class="s2">* </span><span class="s5">0.8</span><span class="s2">,</span>
+                  <span class="s0">height</span><span class="s2">: </span><span class="s0">MediaQuery</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">size</span><span class="s2">.</span><span class="s0">height </span><span class="s2">* </span><span class="s5">0.5</span><span class="s2">,</span>
+                  <span class="s0">child</span><span class="s2">: </span><span class="s0">Stack</span><span class="s2">(</span>
+                    <span class="s0">children</span><span class="s2">: [</span>
+                      <span class="s4">// Traced path</span>
+                      <span class="s0">CustomPaint</span><span class="s2">(</span>
+                        <span class="s0">size</span><span class="s2">: </span><span class="s0">Size</span><span class="s2">.</span><span class="s0">infinite</span><span class="s2">,</span>
+                        <span class="s0">painter</span><span class="s2">: </span><span class="s0">PathPainter</span><span class="s2">(</span><span class="s0">path</span><span class="s2">: </span><span class="s0">_currentPath</span><span class="s2">, </span><span class="s0">strokeWidth</span><span class="s2">: </span><span class="s5">5.0</span><span class="s2">), </span><span class="s4">// Set stroke width to 5.0</span>
+                      <span class="s2">),</span>
+                      <span class="s4">// Game over message</span>
+                      <span class="s3">if </span><span class="s2">(</span><span class="s0">_gameOver</span><span class="s2">)</span>
+                        <span class="s0">Center</span><span class="s2">(</span>
+                          <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                            <span class="s1">'Game Over!'</span><span class="s2">,</span>
+                            <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s5">24.0</span><span class="s2">, </span><span class="s0">fontWeight</span><span class="s2">: </span><span class="s0">FontWeight</span><span class="s2">.</span><span class="s0">bold</span><span class="s2">,</span>
+                              <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+                            <span class="s2">),</span>
+                          <span class="s2">),</span>
+                        <span class="s2">),</span>
+                    <span class="s2">],</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">],</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">bool _checkWinCondition</span><span class="s2">() {</span>
+    <span class="s4">// Implement logic to check if the traced path meets the figure</span>
+    <span class="s4">// For now, we'll just return true after a few seconds to simulate winning</span>
+    <span class="s0">Future</span><span class="s2">.</span><span class="s0">delayed</span><span class="s2">(</span><span class="s0">Duration</span><span class="s2">(</span><span class="s0">seconds</span><span class="s2">: </span><span class="s5">3</span><span class="s2">), () {</span>
+      <span class="s0">setState</span><span class="s2">(() {});</span>
+    <span class="s2">});</span>
+    <span class="s3">return true</span><span class="s2">;</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Path _generateFigure</span><span class="s2">(</span><span class="s0">int level</span><span class="s2">) {</span>
+    <span class="s3">switch </span><span class="s2">(</span><span class="s0">level</span><span class="s2">) {</span>
+      <span class="s3">case </span><span class="s5">1</span><span class="s2">:</span>
+        <span class="s3">return </span><span class="s0">Path</span><span class="s2">()</span>
+          <span class="s2">..</span><span class="s0">moveTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">close</span><span class="s2">(); </span><span class="s4">// Square</span>
+      <span class="s3">case </span><span class="s5">2</span><span class="s2">:</span>
+        <span class="s3">return </span><span class="s0">Path</span><span class="s2">()</span>
+          <span class="s2">..</span><span class="s0">moveTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">50</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">100</span><span class="s2">) </span><span class="s4">// Custom curved path</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">250</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">250</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">250</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">50</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">50</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">close</span><span class="s2">(); </span><span class="s4">// Custom curved shape with more curves</span>
+      <span class="s3">case </span><span class="s5">3</span><span class="s2">:</span>
+        <span class="s3">return </span><span class="s0">Path</span><span class="s2">()</span>
+          <span class="s2">..</span><span class="s0">moveTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">200</span><span class="s2">, </span><span class="s5">250</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">250</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">250</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">250</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">150</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">lineTo</span><span class="s2">(</span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">50</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">100</span><span class="s2">) </span><span class="s4">// Custom curved path</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">250</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">200</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">150</span><span class="s2">, </span><span class="s5">250</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">200</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s5">50</span><span class="s2">, </span><span class="s5">150</span><span class="s2">, </span><span class="s5">100</span><span class="s2">, </span><span class="s5">100</span><span class="s2">)</span>
+          <span class="s2">..</span><span class="s0">close</span><span class="s2">(); </span><span class="s4">// Complex shape with more lines and curves</span>
+      <span class="s3">case </span><span class="s5">4</span><span class="s2">:</span>
+        <span class="s3">return </span><span class="s0">_generateComplexFigure</span><span class="s2">();</span>
+      <span class="s3">default</span><span class="s2">:</span>
+        <span class="s3">return </span><span class="s0">Path</span><span class="s2">(); </span><span class="s4">// Empty path for levels beyond 4</span>
+    <span class="s2">}</span>
+  <span class="s2">}</span>
+  <span class="s0">Path _generateComplexFigure</span><span class="s2">() {</span>
+    <span class="s0">Path path </span><span class="s2">= </span><span class="s0">Path</span><span class="s2">();</span>
+
+    <span class="s4">// Random number generator for creating varying shapes</span>
+    <span class="s0">Random random </span><span class="s2">= </span><span class="s0">Random</span><span class="s2">();</span>
+
+    <span class="s4">// Move to a random starting point within the canvas bounds</span>
+    <span class="s0">path</span><span class="s2">.</span><span class="s0">moveTo</span><span class="s2">(</span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">400</span><span class="s2">, </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">300</span><span class="s2">);</span>
+
+    <span class="s4">// Generate a series of random curves, lines, and shapes</span>
+    <span class="s3">for </span><span class="s2">(</span><span class="s0">int i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">; </span><span class="s0">i </span><span class="s2">&lt; </span><span class="s5">10</span><span class="s2">; </span><span class="s0">i</span><span class="s2">++) {</span>
+      <span class="s0">double controlX1 </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">400</span><span class="s2">;</span>
+      <span class="s0">double controlY1 </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">300</span><span class="s2">;</span>
+      <span class="s0">double controlX2 </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">400</span><span class="s2">;</span>
+      <span class="s0">double controlY2 </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">300</span><span class="s2">;</span>
+      <span class="s0">double endX </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">400</span><span class="s2">;</span>
+      <span class="s0">double endY </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() * </span><span class="s5">300</span><span class="s2">;</span>
+
+      <span class="s4">// Randomly choose between quadratic and cubic Bezier curves</span>
+      <span class="s3">if </span><span class="s2">(</span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextBool</span><span class="s2">()) {</span>
+        <span class="s0">path</span><span class="s2">.</span><span class="s0">quadraticBezierTo</span><span class="s2">(</span><span class="s0">controlX1</span><span class="s2">, </span><span class="s0">controlY1</span><span class="s2">, </span><span class="s0">endX</span><span class="s2">, </span><span class="s0">endY</span><span class="s2">);</span>
+      <span class="s2">} </span><span class="s3">else </span><span class="s2">{</span>
+        <span class="s0">path</span><span class="s2">.</span><span class="s0">cubicTo</span><span class="s2">(</span><span class="s0">controlX1</span><span class="s2">, </span><span class="s0">controlY1</span><span class="s2">, </span><span class="s0">controlX2</span><span class="s2">, </span><span class="s0">controlY2</span><span class="s2">, </span><span class="s0">endX</span><span class="s2">, </span><span class="s0">endY</span><span class="s2">);</span>
+      <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s4">// Close the path to create a closed shape</span>
+    <span class="s0">path</span><span class="s2">.</span><span class="s0">close</span><span class="s2">();</span>
+
+    <span class="s3">return </span><span class="s0">path</span><span class="s2">;</span>
+  <span class="s2">}</span>
+
+
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">SymbolPainter </span><span class="s3">extends </span><span class="s0">CustomPainter </span><span class="s2">{</span>
+  <span class="s3">final </span><span class="s0">Path symbolPath</span><span class="s2">;</span>
+
+  <span class="s3">const </span><span class="s0">SymbolPainter</span><span class="s2">({</span><span class="s0">required </span><span class="s3">this</span><span class="s2">.</span><span class="s0">symbolPath</span><span class="s2">});</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">paint</span><span class="s2">(</span><span class="s0">Canvas canvas</span><span class="s2">, </span><span class="s0">Size size</span><span class="s2">) {</span>
+    <span class="s3">final </span><span class="s0">paint </span><span class="s2">= </span><span class="s0">Paint</span><span class="s2">()</span>
+      <span class="s2">..</span><span class="s0">color </span><span class="s2">= </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">200</span><span class="s2">]!</span>
+      <span class="s2">..</span><span class="s0">strokeWidth </span><span class="s2">= </span><span class="s5">5.0</span>
+      <span class="s2">..</span><span class="s0">style </span><span class="s2">= </span><span class="s0">PaintingStyle</span><span class="s2">.</span><span class="s0">stroke</span><span class="s2">;</span>
+
+    <span class="s0">canvas</span><span class="s2">.</span><span class="s0">drawPath</span><span class="s2">(</span><span class="s0">symbolPath</span><span class="s2">, </span><span class="s0">paint</span><span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">bool shouldRepaint</span><span class="s2">(</span><span class="s0">CustomPainter oldDelegate</span><span class="s2">) =&gt; </span><span class="s3">true</span><span class="s2">;</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">PathPainter </span><span class="s3">extends </span><span class="s0">CustomPainter </span><span class="s2">{</span>
+  <span class="s3">final </span><span class="s0">Path path</span><span class="s2">;</span>
+  <span class="s3">final </span><span class="s0">double strokeWidth</span><span class="s2">;</span>
+
+  <span class="s3">const </span><span class="s0">PathPainter</span><span class="s2">({</span><span class="s0">required </span><span class="s3">this</span><span class="s2">.</span><span class="s0">path</span><span class="s2">, </span><span class="s3">this</span><span class="s2">.</span><span class="s0">strokeWidth </span><span class="s2">= </span><span class="s5">1.0</span><span class="s2">}); </span><span class="s4">// Default stroke width set to 1.0</span>
+
+  <span class="s0">@override</span>
+  <span class="s3">void </span><span class="s0">paint</span><span class="s2">(</span><span class="s0">Canvas canvas</span><span class="s2">, </span><span class="s0">Size size</span><span class="s2">) {</span>
+    <span class="s3">final </span><span class="s0">paint </span><span class="s2">= </span><span class="s0">Paint</span><span class="s2">()</span>
+      <span class="s2">..</span><span class="s0">color </span><span class="s2">= </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">red</span>
+      <span class="s2">..</span><span class="s0">strokeWidth </span><span class="s2">= </span><span class="s0">strokeWidth</span>
+      <span class="s2">..</span><span class="s0">style </span><span class="s2">= </span><span class="s0">PaintingStyle</span><span class="s2">.</span><span class="s0">stroke</span><span class="s2">;</span>
+
+    <span class="s0">canvas</span><span class="s2">.</span><span class="s0">drawPath</span><span class="s2">(</span><span class="s0">path</span><span class="s2">, </span><span class="s0">paint</span><span class="s2">); </span><span class="s4">// Draw the traced path in red</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">bool shouldRepaint</span><span class="s2">(</span><span class="s0">CustomPainter oldDelegate</span><span class="s2">) =&gt; </span><span class="s3">true</span><span class="s2">;</span>
+<span class="s2">}</span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</body>
+</html>

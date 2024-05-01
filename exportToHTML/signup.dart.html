@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>signup.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+signup.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'questions.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">SignUp </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s3">const </span><span class="s0">SignUp</span><span class="s2">({</span><span class="s0">Key</span><span class="s2">? </span><span class="s0">key</span><span class="s2">}) : </span><span class="s3">super</span><span class="s2">(</span><span class="s0">key</span><span class="s2">: </span><span class="s0">key</span><span class="s2">);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">_SignUpState createState</span><span class="s2">() =&gt; </span><span class="s0">_SignUpState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_SignUpState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">SignUp</span><span class="s2">&gt; {</span>
+  <span class="s0">bool _isPressed </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+  <span class="s0">bool _rememberMe </span><span class="s2">= </span><span class="s3">false</span><span class="s2">;</span>
+  <span class="s0">TextEditingController _emailController </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+  <span class="s0">TextEditingController _passwordController </span><span class="s2">= </span><span class="s0">TextEditingController</span><span class="s2">();</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">900</span><span class="s2">],</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Padding</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">20.0</span><span class="s2">),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+            <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+            <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+            <span class="s0">children</span><span class="s2">: [</span>
+              <span class="s0">_buildNameField</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+              <span class="s0">_buildSurnameField</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+              <span class="s0">_buildEmailField</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+              <span class="s0">_buildPasswordField</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+              <span class="s0">_buildRememberMeCheckBox</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+              <span class="s0">_buildSignUpButton</span><span class="s2">(</span><span class="s0">context</span><span class="s2">),</span>
+            <span class="s2">],</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildNameField</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">TextFormField</span><span class="s2">(</span>
+      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+      <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+        <span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Name'</span><span class="s2">,</span>
+        <span class="s0">labelStyle</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">UnderlineInputBorder</span><span class="s2">(</span>
+          <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildSurnameField</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">TextFormField</span><span class="s2">(</span>
+      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+      <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+        <span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Last Name'</span><span class="s2">,</span>
+        <span class="s0">labelStyle</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">UnderlineInputBorder</span><span class="s2">(</span>
+          <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildEmailField</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">TextFormField</span><span class="s2">(</span>
+      <span class="s0">controller</span><span class="s2">: </span><span class="s0">_emailController</span><span class="s2">,</span>
+      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+      <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+        <span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Email'</span><span class="s2">,</span>
+        <span class="s0">labelStyle</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">UnderlineInputBorder</span><span class="s2">(</span>
+          <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildPasswordField</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">TextFormField</span><span class="s2">(</span>
+      <span class="s0">controller</span><span class="s2">: </span><span class="s0">_passwordController</span><span class="s2">,</span>
+      <span class="s0">obscureText</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+      <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+      <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+        <span class="s0">labelText</span><span class="s2">: </span><span class="s1">'Password'</span><span class="s2">,</span>
+        <span class="s0">labelStyle</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">UnderlineInputBorder</span><span class="s2">(</span>
+          <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildRememberMeCheckBox</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Row</span><span class="s2">(</span>
+      <span class="s0">children</span><span class="s2">: [</span>
+        <span class="s0">Checkbox</span><span class="s2">(</span>
+          <span class="s0">value</span><span class="s2">: </span><span class="s0">_rememberMe</span><span class="s2">,</span>
+          <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">value</span><span class="s2">) {</span>
+            <span class="s0">setState</span><span class="s2">(() {</span>
+              <span class="s0">_rememberMe </span><span class="s2">= </span><span class="s0">value</span><span class="s2">!;</span>
+            <span class="s2">});</span>
+          <span class="s2">},</span>
+          <span class="s0">checkColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+          <span class="s0">fillColor</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+        <span class="s2">),</span>
+        <span class="s0">Text</span><span class="s2">(</span>
+          <span class="s1">'Remember me'</span><span class="s2">,</span>
+          <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">],</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildSignUpButton</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Container</span><span class="s2">(</span>
+      <span class="s0">width</span><span class="s2">: </span><span class="s0">double</span><span class="s2">.</span><span class="s0">infinity</span><span class="s2">,</span>
+      <span class="s0">margin</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">symmetric</span><span class="s2">(</span><span class="s0">vertical</span><span class="s2">: </span><span class="s4">20.0</span><span class="s2">),</span>
+      <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+        <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">20.0</span><span class="s2">),</span>
+        <span class="s0">border</span><span class="s2">: </span><span class="s0">_isPressed</span>
+            <span class="s2">? </span><span class="s3">null</span>
+            <span class="s2">: </span><span class="s0">Border</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span>
+          <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!,</span>
+          <span class="s0">width</span><span class="s2">: </span><span class="s4">2.0</span><span class="s2">,</span>
+        <span class="s2">),</span>
+        <span class="s0">boxShadow</span><span class="s2">: </span><span class="s0">_isPressed</span>
+            <span class="s2">? [</span>
+          <span class="s0">BoxShadow</span><span class="s2">(</span>
+            <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!.</span><span class="s0">withOpacity</span><span class="s2">(</span><span class="s4">0.5</span><span class="s2">),</span>
+            <span class="s0">spreadRadius</span><span class="s2">: </span><span class="s4">2</span><span class="s2">,</span>
+            <span class="s0">blurRadius</span><span class="s2">: </span><span class="s4">4</span><span class="s2">,</span>
+            <span class="s0">offset</span><span class="s2">: </span><span class="s0">Offset</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">2</span><span class="s2">), </span><span class="s5">// changes position of shadow</span>
+          <span class="s2">),</span>
+        <span class="s2">]</span>
+            <span class="s2">: [],</span>
+      <span class="s2">),</span>
+      <span class="s0">child</span><span class="s2">: </span><span class="s0">OutlinedButton</span><span class="s2">(</span>
+        <span class="s0">onPressed</span><span class="s2">: () {</span>
+          <span class="s0">setState</span><span class="s2">(() {</span>
+            <span class="s0">_isPressed </span><span class="s2">= !</span><span class="s0">_isPressed</span><span class="s2">;</span>
+          <span class="s2">});</span>
+          <span class="s3">if </span><span class="s2">(</span><span class="s0">_emailController</span><span class="s2">.</span><span class="s0">text</span><span class="s2">.</span><span class="s0">isEmpty </span><span class="s2">|| </span><span class="s0">_passwordController</span><span class="s2">.</span><span class="s0">text</span><span class="s2">.</span><span class="s0">isEmpty</span><span class="s2">) {</span>
+            <span class="s0">ScaffoldMessenger</span><span class="s2">.</span><span class="s0">of</span><span class="s2">(</span><span class="s0">context</span><span class="s2">).</span><span class="s0">showSnackBar</span><span class="s2">(</span>
+              <span class="s0">SnackBar</span><span class="s2">(</span>
+                <span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Please enter both email and password.'</span><span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">);</span>
+          <span class="s2">} </span><span class="s3">else </span><span class="s2">{</span>
+            <span class="s3">if </span><span class="s2">(</span><span class="s0">_isPressed</span><span class="s2">) {</span>
+              <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+                <span class="s0">context</span><span class="s2">,</span>
+                <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">Questions</span><span class="s2">()),</span>
+              <span class="s2">);</span>
+            <span class="s2">}</span>
+          <span class="s2">}</span>
+        <span class="s2">},</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Padding</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">16.0</span><span class="s2">),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+            <span class="s1">'Sign Up'</span><span class="s2">,</span>
+            <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+              <span class="s0">color</span><span class="s2">: </span><span class="s0">_isPressed </span><span class="s2">? </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white </span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">!,</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">style</span><span class="s2">: </span><span class="s0">ButtonStyle</span><span class="s2">(</span>
+          <span class="s0">shape</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">RoundedRectangleBorder</span><span class="s2">&gt;(</span>
+            <span class="s0">RoundedRectangleBorder</span><span class="s2">(</span>
+              <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s4">20.0</span><span class="s2">),</span>
+            <span class="s2">),</span>
+          <span class="s2">),</span>
+          <span class="s0">side</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">BorderSide</span><span class="s2">&gt;(</span>
+            <span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!, </span><span class="s0">width</span><span class="s2">: </span><span class="s4">2.0</span><span class="s2">),</span>
+          <span class="s2">),</span>
+          <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">_isPressed</span>
+              <span class="s2">? </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!)</span>
+              <span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">transparent</span><span class="s2">),</span>
+          <span class="s0">foregroundColor</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span>
+            <span class="s0">_isPressed </span><span class="s2">? </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white </span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">,</span>
+          <span class="s2">),</span>
+          <span class="s0">overlayColor</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span>
+            <span class="s0">Colors</span><span class="s2">.</span><span class="s0">transparent</span><span class="s2">,</span>
+          <span class="s2">),</span>
+          <span class="s0">mouseCursor</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">MouseCursor</span><span class="s2">&gt;(</span>
+            <span class="s0">SystemMouseCursors</span><span class="s2">.</span><span class="s0">click</span><span class="s2">,</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+
+<span class="s2">}</span></pre>
+</body>
+</html>

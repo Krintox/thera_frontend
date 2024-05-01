@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>homepage.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #cf8e6d;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+homepage.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'finemotorskills.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'cognitiveabilities.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'sensory.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'progresstracking.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'goalsetting.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'settings.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'sensory.dart'</span><span class="s2">;</span><span class="s3">// Import the SettingsPage</span>
+
+<span class="s4">class </span><span class="s0">Home </span><span class="s4">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s4">const </span><span class="s0">Home</span><span class="s2">({</span><span class="s0">Key</span><span class="s2">? </span><span class="s0">key</span><span class="s2">}) : </span><span class="s4">super</span><span class="s2">(</span><span class="s0">key</span><span class="s2">: </span><span class="s0">key</span><span class="s2">);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">_HomeState createState</span><span class="s2">() =&gt; </span><span class="s0">_HomeState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s4">class </span><span class="s0">_HomeState </span><span class="s4">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">Home</span><span class="s2">&gt; {</span>
+  <span class="s4">void </span><span class="s0">_navigateToFineMotorSkills</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">FineMotorSkills</span><span class="s2">()),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s4">void </span><span class="s0">_navigateToCognitiveAbilities</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">CognitiveAbilities</span><span class="s2">()),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s4">void </span><span class="s0">_navigateToSensoryIntegration</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">SoundMatchingGame</span><span class="s2">()),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s4">void </span><span class="s0">_navigateToProgressTracking</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">ProgressTracking</span><span class="s2">()),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s4">void </span><span class="s0">_navigateToGoalSetting</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">GoalSettingPage</span><span class="s2">()),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s4">void </span><span class="s0">_navigateToSettings</span><span class="s2">() {</span>
+    <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">Settings</span><span class="s2">()), </span><span class="s3">// Navigate to SettingsPage</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">Widget _buildDashboardItem</span><span class="s2">(</span><span class="s0">String title</span><span class="s2">, </span><span class="s0">IconData icon</span><span class="s2">, </span><span class="s0">VoidCallback onTap</span><span class="s2">) {</span>
+    <span class="s4">return </span><span class="s0">InkWell</span><span class="s2">(</span>
+      <span class="s0">onTap</span><span class="s2">: </span><span class="s0">onTap</span><span class="s2">,</span>
+      <span class="s0">child</span><span class="s2">: </span><span class="s0">Card</span><span class="s2">(</span>
+        <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">300</span><span class="s2">], </span><span class="s3">// Set the card color to green[300]</span>
+        <span class="s0">elevation</span><span class="s2">: </span><span class="s5">4</span><span class="s2">,</span>
+        <span class="s0">shape</span><span class="s2">: </span><span class="s0">RoundedRectangleBorder</span><span class="s2">(</span>
+          <span class="s0">borderRadius</span><span class="s2">: </span><span class="s0">BorderRadius</span><span class="s2">.</span><span class="s0">circular</span><span class="s2">(</span><span class="s5">10.0</span><span class="s2">),</span>
+        <span class="s2">),</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Center</span><span class="s2">(</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+            <span class="s0">mainAxisAlignment</span><span class="s2">: </span><span class="s0">MainAxisAlignment</span><span class="s2">.</span><span class="s0">center</span><span class="s2">,</span>
+            <span class="s0">children</span><span class="s2">: [</span>
+              <span class="s0">Icon</span><span class="s2">(</span>
+                <span class="s0">icon</span><span class="s2">,</span>
+                <span class="s0">size</span><span class="s2">: </span><span class="s5">50</span><span class="s2">,</span>
+                <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">, </span><span class="s3">// Change icon color to black</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s5">8</span><span class="s2">),</span>
+              <span class="s0">Text</span><span class="s2">(</span>
+                <span class="s0">title</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                  <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">,</span>
+                  <span class="s0">fontSize</span><span class="s2">: </span><span class="s5">16</span><span class="s2">,</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">],</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s4">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s5">900</span><span class="s2">],</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Dashboard'</span><span class="s2">),</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">300</span><span class="s2">],</span>
+      <span class="s2">),</span>
+      <span class="s0">drawer</span><span class="s2">: </span><span class="s0">Drawer</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">ListView</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">zero</span><span class="s2">,</span>
+          <span class="s0">children</span><span class="s2">: &lt;</span><span class="s0">Widget</span><span class="s2">&gt;[</span>
+            <span class="s0">DrawerHeader</span><span class="s2">(</span>
+              <span class="s0">decoration</span><span class="s2">: </span><span class="s0">BoxDecoration</span><span class="s2">(</span>
+                <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s5">300</span><span class="s2">],</span>
+              <span class="s2">),</span>
+              <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'Menu'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span>
+                  <span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">,</span>
+                  <span class="s0">fontSize</span><span class="s2">: </span><span class="s5">22</span><span class="s2">,</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">),</span>
+            <span class="s0">ListTile</span><span class="s2">(</span>
+              <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Settings'</span><span class="s2">),</span>
+              <span class="s0">onTap</span><span class="s2">: </span><span class="s0">_navigateToSettings</span><span class="s2">, </span><span class="s3">// Connect Settings button to SettingsPage</span>
+            <span class="s2">),</span>
+            <span class="s3">// Add more ListTile items for navigation</span>
+          <span class="s2">],</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">GridView</span><span class="s2">.</span><span class="s0">count</span><span class="s2">(</span>
+        <span class="s0">crossAxisCount</span><span class="s2">: </span><span class="s5">2</span><span class="s2">,</span>
+        <span class="s0">padding</span><span class="s2">: </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s5">18.0</span><span class="s2">),</span>
+        <span class="s0">children</span><span class="s2">: [</span>
+          <span class="s0">_buildDashboardItem</span><span class="s2">(</span><span class="s1">'Fine Motor Skills'</span><span class="s2">, </span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">brush</span><span class="s2">, </span><span class="s0">_navigateToFineMotorSkills</span><span class="s2">),</span>
+          <span class="s0">_buildDashboardItem</span><span class="s2">(</span><span class="s1">'Cognitive Abilities'</span><span class="s2">, </span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">lightbulb</span><span class="s2">, </span><span class="s0">_navigateToCognitiveAbilities</span><span class="s2">),</span>
+          <span class="s0">_buildDashboardItem</span><span class="s2">(</span><span class="s1">'Sensory Integration'</span><span class="s2">, </span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">touch_app</span><span class="s2">, </span><span class="s0">_navigateToSensoryIntegration</span><span class="s2">),</span>
+          <span class="s0">_buildDashboardItem</span><span class="s2">(</span><span class="s1">'Progress Tracking'</span><span class="s2">, </span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">trending_up</span><span class="s2">, </span><span class="s0">_navigateToProgressTracking</span><span class="s2">),</span>
+          <span class="s0">_buildDashboardItem</span><span class="s2">(</span><span class="s1">'Goal Setting'</span><span class="s2">, </span><span class="s0">Icons</span><span class="s2">.</span><span class="s0">checklist</span><span class="s2">, </span><span class="s0">_navigateToGoalSetting</span><span class="s2">),</span>
+          <span class="s3">// Add more dashboard items as needed</span>
+        <span class="s2">],</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span>
+
+
+
+
+
+</pre>
+</body>
+</html>

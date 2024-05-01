@@ -1,0 +1,237 @@
+<html>
+<head>
+<title>stresspage.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #6aab73;}
+.s2 { color: #bcbec4;}
+.s3 { color: #cf8e6d;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+stresspage.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">'homepage.dart'</span><span class="s2">;</span>
+
+<span class="s3">class </span><span class="s0">StressAndCopingPage </span><span class="s3">extends </span><span class="s0">StatefulWidget </span><span class="s2">{</span>
+  <span class="s0">@override</span>
+  <span class="s0">_StressAndCopingPageState createState</span><span class="s2">() =&gt; </span><span class="s0">_StressAndCopingPageState</span><span class="s2">();</span>
+<span class="s2">}</span>
+
+<span class="s3">class </span><span class="s0">_StressAndCopingPageState </span><span class="s3">extends </span><span class="s0">State</span><span class="s2">&lt;</span><span class="s0">StressAndCopingPage</span><span class="s2">&gt; {</span>
+  <span class="s0">String</span><span class="s2">? </span><span class="s0">_selectedActivityLevel</span><span class="s2">;</span>
+  <span class="s0">String</span><span class="s2">? </span><span class="s0">_selectedLearningStyle</span><span class="s2">;</span>
+  <span class="s0">String</span><span class="s2">? </span><span class="s0">_selectedAccessibilityNeeds</span><span class="s2">;</span>
+  <span class="s0">String</span><span class="s2">? </span><span class="s0">_selectedTherapyExperience</span><span class="s2">;</span>
+
+  <span class="s0">List</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt; </span><span class="s0">_activityLevelOptions </span><span class="s2">= [</span>
+    <span class="s1">'Sedentary (little to no physical activity)'</span><span class="s2">,</span>
+    <span class="s1">'Moderately active (regular light physical activity)'</span><span class="s2">,</span>
+    <span class="s1">'Highly active (regular vigorous physical activity)'</span><span class="s2">,</span>
+  <span class="s2">];</span>
+
+  <span class="s0">List</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt; </span><span class="s0">_learningStyleOptions </span><span class="s2">= [</span>
+    <span class="s1">'Visual (learn best through seeing)'</span><span class="s2">,</span>
+    <span class="s1">'Auditory (learn best through hearing)'</span><span class="s2">,</span>
+    <span class="s1">'Hands-on (learn best through doing)'</span><span class="s2">,</span>
+    <span class="s1">'Reading/Writing (learn best reading/writing)'</span><span class="s2">,</span>
+  <span class="s2">];</span>
+
+  <span class="s0">List</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt; </span><span class="s0">_accessibilityNeedsOptions </span><span class="s2">= [</span>
+    <span class="s1">'Visual impairment'</span><span class="s2">,</span>
+    <span class="s1">'Hearing impairment'</span><span class="s2">,</span>
+    <span class="s1">'Motor impairment'</span><span class="s2">,</span>
+    <span class="s1">'Cognitive impairment'</span><span class="s2">,</span>
+    <span class="s1">'No specific accessibility needs'</span><span class="s2">,</span>
+  <span class="s2">];</span>
+
+  <span class="s0">List</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt; </span><span class="s0">_therapyExperienceOptions </span><span class="s2">= [</span>
+    <span class="s1">'Yes'</span><span class="s2">,</span>
+    <span class="s1">'No'</span><span class="s2">,</span>
+  <span class="s2">];</span>
+
+  <span class="s3">void </span><span class="s0">_showSubmitConfirmation</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s0">showDialog</span><span class="s2">(</span>
+      <span class="s0">context</span><span class="s2">: </span><span class="s0">context</span><span class="s2">,</span>
+      <span class="s0">builder</span><span class="s2">: (</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+        <span class="s3">return </span><span class="s0">AlertDialog</span><span class="s2">(</span>
+          <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">],</span>
+          <span class="s0">title</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Submission Confirmation'</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">black</span><span class="s2">)),</span>
+          <span class="s0">content</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Your response has been submitted.'</span><span class="s2">),</span>
+        <span class="s2">);</span>
+      <span class="s2">},</span>
+    <span class="s2">);</span>
+
+    <span class="s0">Future</span><span class="s2">.</span><span class="s0">delayed</span><span class="s2">(</span><span class="s0">Duration</span><span class="s2">(</span><span class="s0">milliseconds</span><span class="s2">: </span><span class="s4">1500</span><span class="s2">), () {</span>
+      <span class="s0">Navigator</span><span class="s2">.</span><span class="s0">push</span><span class="s2">(</span><span class="s0">context</span><span class="s2">, </span><span class="s0">MaterialPageRoute</span><span class="s2">(</span><span class="s0">builder</span><span class="s2">: (</span><span class="s0">context</span><span class="s2">) =&gt; </span><span class="s0">Home</span><span class="s2">()));</span>
+    <span class="s2">});</span>
+  <span class="s2">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build</span><span class="s2">(</span><span class="s0">BuildContext context</span><span class="s2">) {</span>
+    <span class="s3">return </span><span class="s0">Scaffold</span><span class="s2">(</span>
+      <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">900</span><span class="s2">],</span>
+      <span class="s0">appBar</span><span class="s2">: </span><span class="s0">AppBar</span><span class="s2">(</span>
+        <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">900</span><span class="s2">],</span>
+      <span class="s2">),</span>
+      <span class="s0">body</span><span class="s2">: </span><span class="s0">SingleChildScrollView</span><span class="s2">(</span>
+        <span class="s0">child</span><span class="s2">: </span><span class="s0">Padding</span><span class="s2">(</span>
+          <span class="s0">padding</span><span class="s2">: </span><span class="s3">const </span><span class="s0">EdgeInsets</span><span class="s2">.</span><span class="s0">all</span><span class="s2">(</span><span class="s4">16.0</span><span class="s2">),</span>
+          <span class="s0">child</span><span class="s2">: </span><span class="s0">Column</span><span class="s2">(</span>
+            <span class="s0">crossAxisAlignment</span><span class="s2">: </span><span class="s0">CrossAxisAlignment</span><span class="s2">.</span><span class="s0">stretch</span><span class="s2">,</span>
+            <span class="s0">mainAxisSize</span><span class="s2">: </span><span class="s0">MainAxisSize</span><span class="s2">.</span><span class="s0">min</span><span class="s2">,</span>
+            <span class="s0">children</span><span class="s2">: [</span>
+              <span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'4. Activity Level:'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16.0</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">8</span><span class="s2">),</span>
+              <span class="s0">DropdownButtonFormField</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                <span class="s0">value</span><span class="s2">: </span><span class="s0">_selectedActivityLevel</span><span class="s2">,</span>
+                <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">String</span><span class="s2">? </span><span class="s0">value</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_selectedActivityLevel </span><span class="s2">= </span><span class="s0">value</span><span class="s2">;</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">items</span><span class="s2">: </span><span class="s0">_activityLevelOptions</span><span class="s2">.</span><span class="s0">map</span><span class="s2">((</span><span class="s0">String level</span><span class="s2">) {</span>
+                  <span class="s3">return </span><span class="s0">DropdownMenuItem</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                    <span class="s0">value</span><span class="s2">: </span><span class="s0">level</span><span class="s2">,</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s0">level</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">)),</span>
+                  <span class="s2">);</span>
+                <span class="s2">}).</span><span class="s0">toList</span><span class="s2">(),</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+                  <span class="s0">filled</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+                  <span class="s0">fillColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+                  <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                  <span class="s0">focusedBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                <span class="s0">dropdownColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">32</span><span class="s2">),</span>
+              <span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'5. Preferred Learning Style:'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16.0</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">8</span><span class="s2">),</span>
+              <span class="s0">DropdownButtonFormField</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                <span class="s0">value</span><span class="s2">: </span><span class="s0">_selectedLearningStyle</span><span class="s2">,</span>
+                <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">String</span><span class="s2">? </span><span class="s0">value</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_selectedLearningStyle </span><span class="s2">= </span><span class="s0">value</span><span class="s2">;</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">items</span><span class="s2">: </span><span class="s0">_learningStyleOptions</span><span class="s2">.</span><span class="s0">map</span><span class="s2">((</span><span class="s0">String style</span><span class="s2">) {</span>
+                  <span class="s3">return </span><span class="s0">DropdownMenuItem</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                    <span class="s0">value</span><span class="s2">: </span><span class="s0">style</span><span class="s2">,</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s0">style</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">)),</span>
+                  <span class="s2">);</span>
+                <span class="s2">}).</span><span class="s0">toList</span><span class="s2">(),</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+                  <span class="s0">filled</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+                  <span class="s0">fillColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+                  <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                  <span class="s0">focusedBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                <span class="s0">dropdownColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">32</span><span class="s2">),</span>
+              <span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'6. Accessibility Needs:'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16.0</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">8</span><span class="s2">),</span>
+              <span class="s0">DropdownButtonFormField</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                <span class="s0">value</span><span class="s2">: </span><span class="s0">_selectedAccessibilityNeeds</span><span class="s2">,</span>
+                <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">String</span><span class="s2">? </span><span class="s0">value</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_selectedAccessibilityNeeds </span><span class="s2">= </span><span class="s0">value</span><span class="s2">;</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">items</span><span class="s2">: </span><span class="s0">_accessibilityNeedsOptions</span><span class="s2">.</span><span class="s0">map</span><span class="s2">((</span><span class="s0">String needs</span><span class="s2">) {</span>
+                  <span class="s3">return </span><span class="s0">DropdownMenuItem</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                    <span class="s0">value</span><span class="s2">: </span><span class="s0">needs</span><span class="s2">,</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s0">needs</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">)),</span>
+                  <span class="s2">);</span>
+                <span class="s2">}).</span><span class="s0">toList</span><span class="s2">(),</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+                  <span class="s0">filled</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+                  <span class="s0">fillColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+                  <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                  <span class="s0">focusedBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                <span class="s0">dropdownColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">32</span><span class="s2">),</span>
+              <span class="s0">Text</span><span class="s2">(</span>
+                <span class="s1">'7. Previous Therapy Experience:'</span><span class="s2">,</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">fontSize</span><span class="s2">: </span><span class="s4">16.0</span><span class="s2">, </span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">8</span><span class="s2">),</span>
+              <span class="s0">DropdownButtonFormField</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                <span class="s0">value</span><span class="s2">: </span><span class="s0">_selectedTherapyExperience</span><span class="s2">,</span>
+                <span class="s0">onChanged</span><span class="s2">: (</span><span class="s0">String</span><span class="s2">? </span><span class="s0">value</span><span class="s2">) {</span>
+                  <span class="s0">setState</span><span class="s2">(() {</span>
+                    <span class="s0">_selectedTherapyExperience </span><span class="s2">= </span><span class="s0">value</span><span class="s2">;</span>
+                  <span class="s2">});</span>
+                <span class="s2">},</span>
+                <span class="s0">items</span><span class="s2">: </span><span class="s0">_therapyExperienceOptions</span><span class="s2">.</span><span class="s0">map</span><span class="s2">((</span><span class="s0">String experience</span><span class="s2">) {</span>
+                  <span class="s3">return </span><span class="s0">DropdownMenuItem</span><span class="s2">&lt;</span><span class="s0">String</span><span class="s2">&gt;(</span>
+                    <span class="s0">value</span><span class="s2">: </span><span class="s0">experience</span><span class="s2">,</span>
+                    <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s0">experience</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">)),</span>
+                  <span class="s2">);</span>
+                <span class="s2">}).</span><span class="s0">toList</span><span class="s2">(),</span>
+                <span class="s0">decoration</span><span class="s2">: </span><span class="s0">InputDecoration</span><span class="s2">(</span>
+                  <span class="s0">filled</span><span class="s2">: </span><span class="s3">true</span><span class="s2">,</span>
+                  <span class="s0">fillColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+                  <span class="s0">enabledBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                  <span class="s0">focusedBorder</span><span class="s2">: </span><span class="s0">OutlineInputBorder</span><span class="s2">(</span>
+                    <span class="s0">borderSide</span><span class="s2">: </span><span class="s0">BorderSide</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">100</span><span class="s2">]!),</span>
+                  <span class="s2">),</span>
+                <span class="s2">),</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">),</span>
+                <span class="s0">dropdownColor</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">grey</span><span class="s2">[</span><span class="s4">800</span><span class="s2">],</span>
+              <span class="s2">),</span>
+              <span class="s0">SizedBox</span><span class="s2">(</span><span class="s0">height</span><span class="s2">: </span><span class="s4">20</span><span class="s2">),</span>
+              <span class="s0">ElevatedButton</span><span class="s2">(</span>
+                <span class="s0">onPressed</span><span class="s2">: () {</span>
+                  <span class="s5">// Handle button press</span>
+                  <span class="s0">_showSubmitConfirmation</span><span class="s2">(</span><span class="s0">context</span><span class="s2">); </span><span class="s5">// Show confirmation dialog and navigate after delay</span>
+                <span class="s2">},</span>
+                <span class="s0">child</span><span class="s2">: </span><span class="s0">Text</span><span class="s2">(</span><span class="s1">'Submit'</span><span class="s2">, </span><span class="s0">style</span><span class="s2">: </span><span class="s0">TextStyle</span><span class="s2">(</span><span class="s0">color</span><span class="s2">: </span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">white</span><span class="s2">)),</span>
+                <span class="s0">style</span><span class="s2">: </span><span class="s0">ButtonStyle</span><span class="s2">(</span>
+                  <span class="s0">backgroundColor</span><span class="s2">: </span><span class="s0">MaterialStateProperty</span><span class="s2">.</span><span class="s0">all</span><span class="s2">&lt;</span><span class="s0">Color</span><span class="s2">&gt;(</span><span class="s0">Colors</span><span class="s2">.</span><span class="s0">green</span><span class="s2">[</span><span class="s4">200</span><span class="s2">]!),</span>
+                <span class="s2">),</span>
+              <span class="s2">),</span>
+            <span class="s2">],</span>
+          <span class="s2">),</span>
+        <span class="s2">),</span>
+      <span class="s2">),</span>
+    <span class="s2">);</span>
+  <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
