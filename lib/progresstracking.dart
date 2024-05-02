@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProgressTracking extends StatefulWidget {
   const ProgressTracking({Key? key}) : super(key: key);
 
   @override
   _ProgressTrackingState createState() => _ProgressTrackingState();
+}
+
+class ChartData {
+  final DateTime date;
+  double progress; // Make progress mutable
+
+  ChartData(this.date, this.progress);
 }
 
 class _ProgressTrackingState extends State<ProgressTracking> {
@@ -21,6 +30,121 @@ class _ProgressTrackingState extends State<ProgressTracking> {
     ChartData(DateTime(2023, 04, 01), 0.85),
     ChartData(DateTime(2023, 05, 01), 0.9),
   ]; // Sample historical data
+  double improvementRate = 0.105; // Sample improvement rate
+
+  @override
+  void initState() {
+    super.initState();
+    fetchImprovementAnalysis(); // Fetch improvement analysis when the widget initializes
+  }
+
+  // Method to fetch improvement analysis based on previous games
+  Future<void> fetchImprovementAnalysis() async {
+    final String apiUrl =
+        'https://occ-therapy-backend.onrender.com/api/user/improvement';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+      final String improvement = responseData['improvement'];
+      improvementRate = double.parse(improvement.replaceFirst('%', '')) /
+          100; // Parse improvement rate
+      print('Improvement: $improvement');
+      updateGraph(); // Update graph with improvement data
+    } else {
+      print('Failed to fetch improvement analysis');
+      // Handle error response
+    }
+  }
+
+  // Method to update graph with improvement data
+  void updateGraph() {
+    setState(() {
+      for (int i = 0; i < historicalData.length; i++) {
+        // Update progress with improvement rate
+        historicalData[i].progress +=
+            historicalData[i].progress * improvementRate;
+      }
+    });
+  }
+
+  // Method to fetch details of a particular game
+  Future<Map<String, dynamic>> fetchGameDetails(String gameName) async {
+    final String apiUrl =
+        'https://occ-therapy-backend.onrender.com/api/games/$gameName';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      print('Failed to fetch game details');
+      // Handle error response
+      return {}; // Return a default value or handle it accordingly
+    }
+  }
+
+  // Method to fetch details of a specific game for a specific user
+  Future<Map<String, dynamic>> fetchGameDetailsForUser(
+      String gameName, String userId) async {
+    final String apiUrl =
+        'https://your-backend-domain.com/api/games/$gameName/user/$userId';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      print('Failed to fetch game details for user');
+      // Handle error response
+      return {}; // Return a default value or handle it accordingly
+    }
+  }
+
+  // Method to fetch details of all games played by a specific user across all games
+  Future<List<Map<String, dynamic>>> fetchAllGamesForUser(String userId) async {
+    final String apiUrl =
+        'https://occ-therapy-backend.onrender.com/api/games/user/$userId';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+    } else {
+      print('Failed to fetch all games for user');
+      // Handle error response
+      return []; // Return a default value or handle it accordingly
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +245,8 @@ class _ProgressTrackingState extends State<ProgressTracking> {
                 ],
               ),
             ),
+            SizedBox(height: 26.0),
+            ),
           ],
         ),
       ),
@@ -134,6 +260,3 @@ class ChartData {
 
   ChartData(this.date, this.progress);
 }
-
-
-
