@@ -7,7 +7,7 @@ import 'homepage.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  @override 
+  @override
   _LoginPageState createState() => _LoginPageState();
 }
 
@@ -18,19 +18,21 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _isHovered = true;
 
+  final String _baseUrl = 'https://occ-therapy-backend.onrender.com/';
+
   Future<void> loginUser() async {
     final response = await http.post(
-      Uri.parse('http://localhost:8900/api/auth/login'),
+      Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'email': _email, // Change username to email
+        'email': _email,
         'password': _password,
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // Parse response body to get JWT token
       final Map<String, dynamic> responseData = json.decode(response.body);
       final String jwtToken = responseData['token'];
@@ -39,6 +41,15 @@ class _LoginPageState extends State<LoginPage> {
       // For example:
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('jwtToken', jwtToken);
+
+      // Save remember me preference
+      if (_rememberMe) {
+        prefs.setString('email', _email);
+        prefs.setString('password', _password);
+      } else {
+        prefs.remove('email');
+        prefs.remove('password');
+      }
 
       // Navigate to home page
       Navigator.push(
@@ -53,6 +64,30 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
+  }
+
+  Future<void> fetchData() async {
+    try {
+      var response = await http.get(
+          Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'));
+      if (response.statusCode == 201) {
+        // Successful GET request
+        var jsonData = json.decode(response.body);
+        // Process jsonData as needed
+        print(jsonData);
+      } else {
+        // Handle errors
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // Call fetchData when the widget is initialized
   }
 
   @override
@@ -80,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildEmailField(BuildContext context) { // Change method name and label
+  Widget _buildEmailField(BuildContext context) {
+    // Change method name and label
     return TextFormField(
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -172,15 +208,14 @@ class _LoginPageState extends State<LoginPage> {
             : [],
         color: _isHovered
             ? Colors.green[200]!
-            : (_email.isNotEmpty &&
-                    _password.isNotEmpty &&
-                    _isPressed
+            : (_email.isNotEmpty && _password.isNotEmpty && _isPressed
                 ? Colors.green[200]!
                 : Colors.transparent),
       ),
       child: InkWell(
         onTap: () {
-          if (_email.isNotEmpty && _password.isNotEmpty) { // Change variable name
+          if (_email.isNotEmpty && _password.isNotEmpty) {
+            // Change variable name
             if (_rememberMe) {
               // Implement logic to save login state for "Remember Me"
             }
@@ -191,7 +226,8 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Please enter both email and password.'), // Change message
+                content: Text(
+                    'Please enter both email and password.'), // Change message
               ),
             );
           }
@@ -225,9 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                 : [],
             color: _isHovered
                 ? Colors.green[200]!
-                : (_email.isNotEmpty &&
-                        _password.isNotEmpty &&
-                        _isPressed
+                : (_email.isNotEmpty && _password.isNotEmpty && _isPressed
                     ? Colors.green[200]!
                     : Colors.transparent),
           ),
