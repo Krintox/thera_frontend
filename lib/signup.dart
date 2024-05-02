@@ -13,27 +13,38 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   bool _isPressed = false;
   bool _rememberMe = false;
+  TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
 
+  final String _baseUrl = 'https://occ-therapy-backend.onrender.com/';
+
   Future<void> registerUser() async {
+    setState(() {
+      _isPressed = true;
+    });
+
     final response = await http.post(
-      Uri.parse('http://localhost:8900/api/auth/register'),
+      Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         'email': _emailController.text,
-        'password': _passwordController.text,
         'username': _usernameController.text,
-        'phone': _phoneNumberController.text,
+        'password': _passwordController.text,
+        'phoneNumber': _phoneNumberController.text,
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // User registered successfully, navigate to next screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User registered successfully'),
+        ),
+      );
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Questions()),
@@ -46,6 +57,9 @@ class _SignUpState extends State<SignUp> {
         ),
       );
     }
+    setState(() {
+      _isPressed = false;
+    });
   }
 
   @override
@@ -66,8 +80,6 @@ class _SignUpState extends State<SignUp> {
               _buildPasswordField(context),
               SizedBox(height: 20.0),
               _buildPhoneNumberField(context),
-              SizedBox(height: 20.0),
-              _buildRememberMeCheckBox(context),
               SizedBox(height: 20.0),
               _buildSignUpButton(context),
             ],
@@ -131,27 +143,6 @@ class _SignUpState extends State<SignUp> {
           borderSide: BorderSide(color: Colors.white),
         ),
       ),
-    );
-  }
-
-  Widget _buildRememberMeCheckBox(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-          value: _rememberMe,
-          onChanged: (value) {
-            setState(() {
-              _rememberMe = value!;
-            });
-          },
-          checkColor: Colors.white,
-          fillColor: MaterialStateProperty.all<Color>(Colors.green[100]!),
-        ),
-        Text(
-          'Remember me',
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
     );
   }
 
