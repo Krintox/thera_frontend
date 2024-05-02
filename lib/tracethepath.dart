@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert'; // Add this import for JSON encoding
-import 'package:http/http.dart' as http; // Add this import for making HTTP requests
+import 'package:http/http.dart'
+    as http; // Add this import for making HTTP requests
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import for SharedPreferences
 import 'dart:math';
 
@@ -32,6 +33,7 @@ class _TraceThePath extends State<TraceThePath> {
     startTimer();
     _figurePath = _generateFigure(_level); // Generate the figure path
     _initializePreferences();
+    _loadGameData(); // Load saved game data during initialization
   }
 
   void _initializePreferences() async {
@@ -72,36 +74,92 @@ class _TraceThePath extends State<TraceThePath> {
       _level = 1;
       _figurePath = _generateFigure(_level);
     });
+    saveGameData(); // Save game data when resetting the game
   }
 
-  Future<void> saveGameData(double tracedPathLength) async {
-    final String apiUrl = 'http://localhost:8900/api/games/trace-path'; // API URL
-    final String jwtToken = _prefs?.getString('jwtToken') ?? ''; // Fetch JWT token from SharedPreferences
+  class GameDataService {
+  static const String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/trace-path';
+  static const String jwtToken = 'Bearer JWT_token'; // Replace with your JWT token
+  static const int previousGamesLimit = 5; // Limit of previous games to consider
 
-    final Map<String, dynamic> gameData = {
-      'score': minutes * 60 + seconds, // Time taken in seconds
-      'progress': tracedPathLength,
-      'gameOver': _gameOver,
-      'level': _level,
-      'secondsLeft': _secondsLeft,
-      'figurePath': _figurePath.toString(), // Convert Path to string for storage
-      'isTracing': _isTracing,
-    };
+  Future<Map<String, dynamic>> saveGameData(Map<String, dynamic> gameData) async {
+  try {
+  // Fetch previous game data
+  final previousData = await fetchPreviousGamesData();
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $jwtToken',
-      },
-      body: jsonEncode(gameData),
-    );
+  final response = await http.post(
+  Uri.parse(apiUrl),
+  headers: {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer $jwtToken',
+  },
+  body: jsonEncode(gameData),
+  );
 
-    if (response.statusCode == 201) {
-      print('Trace the Path game data saved successfully');
-    } else {
-      print('Failed to save Trace the Path game data');
-    }
+  if (response.statusCode == 201) {
+  print('Trace the Path game data saved successfully');
+  final responseData = jsonDecode(response.body);
+  final message = responseData['message'];
+
+  // Calculate improvement
+  double totalImprovement = 0;
+  int validGamesCount = 0;
+  for (final prevGameData in previousData) {
+  if (prevGameData.containsKey('score')) {
+  final previousScore = prevGameData['score'] as int;
+  final currentScore = gameData['score'] as int;
+  final improvement = ((currentScore - previousScore) / previousScore) * 100;
+  totalImprovement += improvement;
+  validGamesCount++;
+  }
+  }
+
+  final overallImprovement = validGamesCount > 0 ? (totalImprovement / validGamesCount).toStringAsFixed(2) : 0;
+
+  return {'message': message, 'improvement': '$overallImprovement%'};
+  } else {
+  print('Failed to save Trace the Path game data');
+  // Handle error response
+  return null;
+  }
+  } catch (e) {
+  print('Error: $e');
+  // Handle network or server error
+  return null;
+  }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchPreviousGamesData() async {
+  try {
+  final response = await http.get(
+  Uri.parse(apiUrl),
+  headers: {
+  'Authorization': 'Bearer $jwtToken',
+  },
+  );
+
+  if (response.statusCode == 200) {
+  final responseData = jsonDecode(response.body) as List;
+  // Fetch last 5 games data
+  final lastGamesData = responseData.sublist(0, previousGamesLimit);
+  return lastGamesData.cast<Map<String, dynamic>>();
+  } else {
+  print('Failed to fetch Trace the Path game data');
+  // Handle error response
+  return [];
+  }
+  } catch (e) {
+  print('Error: $e');
+  // Handle network or server error
+  return [];
+  }
+  }
+  }
+
+  Path _parseSvgPath(String pathString) {
+    final path = Path();
+    // Use your own logic to parse the SVG path string here
+    return path;
   }
 
   @override
@@ -141,7 +199,8 @@ class _TraceThePath extends State<TraceThePath> {
             ),
           ],
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(40.0), // Set the height of the PreferredSize
+            preferredSize:
+                Size.fromHeight(40.0), // Set the height of the PreferredSize
             child: Center(
               child: Text(
                 "Time: $minutes:$seconds",
@@ -158,7 +217,8 @@ class _TraceThePath extends State<TraceThePath> {
             children: [
               // Symbol drawing
               CustomPaint(
-                size: Size(MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.height * 0.5),
+                size: Size(MediaQuery.of(context).size.width * 0.8,
+                    MediaQuery.of(context).size.height * 0.5),
                 painter: SymbolPainter(symbolPath: _figurePath),
               ),
               // Tracing area with instructions
@@ -182,13 +242,15 @@ class _TraceThePath extends State<TraceThePath> {
                     if (_gameOver) return;
                     _isTracing = true;
                     _currentPath = Path(); // Clear the user's tracing path
-                    _currentPath.moveTo(details.localPosition.dx, details.localPosition.dy);
+                    _currentPath.moveTo(
+                        details.localPosition.dx, details.localPosition.dy);
                   });
                 },
                 onPanUpdate: (details) {
                   setState(() {
                     if (_gameOver) return;
-                    _currentPath.lineTo(details.localPosition.dx, details.localPosition.dy);
+                    _currentPath.lineTo(
+                        details.localPosition.dx, details.localPosition.dy);
                   });
                 },
                 onPanEnd: (details) async {
@@ -197,7 +259,8 @@ class _TraceThePath extends State<TraceThePath> {
                     if (!_gameOver && _checkWinCondition()) {
                       _level++;
                       if (_level <= 3) {
-                        _figurePath = _generateFigure(_level); // Generate the new figure path
+                        _figurePath = _generateFigure(
+                            _level); // Generate the new figure path
                         _secondsLeft = 0; // Reset timer for the next level
                         startTimer(); // Start timer for the next level
                       } else {
@@ -209,8 +272,7 @@ class _TraceThePath extends State<TraceThePath> {
                   });
                   // Calculate length of traced path
                   double tracedPathLength = calculatePathLength(_currentPath);
-                  // Save game data when tracing ends
-                  await saveGameData(tracedPathLength);
+                  // Save
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -220,7 +282,9 @@ class _TraceThePath extends State<TraceThePath> {
                       // Traced path
                       CustomPaint(
                         size: Size.infinite,
-                        painter: PathPainter(path: _currentPath, strokeWidth: 5.0), // Set stroke width to 5.0
+                        painter: PathPainter(
+                            path: _currentPath,
+                            strokeWidth: 5.0), // Set stroke width to 5.0
                       ),
                       // Game over message
                       if (_gameOver)
@@ -380,7 +444,9 @@ class PathPainter extends CustomPainter {
   final Path path;
   final double strokeWidth;
 
-  const PathPainter({required this.path, this.strokeWidth = 1.0}); // Default stroke width set to 1.0
+  const PathPainter(
+      {required this.path,
+      this.strokeWidth = 1.0}); // Default stroke width set to 1.0
 
   @override
   void paint(Canvas canvas, Size size) {
