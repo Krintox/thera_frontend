@@ -155,18 +155,18 @@ class _SignUpState extends State<SignUp> {
         border: _isPressed
             ? null
             : Border.all(
-                color: Colors.green[100]!,
-                width: 2.0,
-              ),
+          color: Colors.green[100]!,
+          width: 2.0,
+        ),
         boxShadow: _isPressed
             ? [
-                BoxShadow(
-                  color: Colors.green[100]!.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: Offset(0, 2), // changes position of shadow
-                ),
-              ]
+          BoxShadow(
+            color: Colors.green[100]!.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ]
             : [],
       ),
       child: OutlinedButton(
