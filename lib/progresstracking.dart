@@ -160,30 +160,13 @@ class _ProgressTrackingState extends State<ProgressTracking> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Visual Progress Box
-            Container(
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Visual Progress',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                  SizedBox(height: 8.0),
-                  LinearProgressIndicator(
-                    value: completionRate,
-                    color: Colors.green[200],
-                    backgroundColor: Colors.grey[700],
-                  ),
-                ],
-              ),
-            ),
+            // ... Your existing code here
+
             SizedBox(height: 26.0),
-            // Metrics Box
+            // API Endpoints
+            // ... Your existing code here
+
+            // Historical Data Box with updated chart
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -194,38 +177,7 @@ class _ProgressTrackingState extends State<ProgressTracking> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Metrics',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    'Completion Rate: ${(completionRate * 100).toStringAsFixed(0)}%',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    'Accuracy: ${(accuracy * 100).toStringAsFixed(0)}%',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    'Time Taken: ${timeTaken.toStringAsFixed(1)} hours',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 26.0),
-            // Historical Data Box
-            Container(
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Historical Data',
+                    'Historical Data with Improvement',
                     style: TextStyle(color: Colors.white, fontSize: 18.0),
                   ),
                   SizedBox(height: 8.0),
@@ -245,18 +197,9 @@ class _ProgressTrackingState extends State<ProgressTracking> {
                 ],
               ),
             ),
-            SizedBox(height: 26.0),
-            ),
           ],
         ),
       ),
     );
   }
-}
-
-class ChartData {
-  final DateTime date;
-  final double progress;
-
-  ChartData(this.date, this.progress);
 }
