@@ -147,8 +147,6 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   }
 
   void resetGame() async {
-    // Save game data to the backend
-    await saveGameData();
 
     setState(() {
       shuffledEmojis = emojis.toList()
@@ -181,94 +179,83 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     super.dispose();
   }
 
-  class GameDataService {
-  static const String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/memory-match';
-  static const String jwtToken = 'Bearer JWT_token'; // Replace with your JWT token
-  static const int previousGamesLimit = 5; // Limit of previous games to consider
+   String _apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/memory-match';
+   String _jwtToken = 'Bearer JWT_token'; // Replace with your JWT token
+   int _previousGamesLimit = 5; // Limit of previous games to consider
 
   Future<Map<String, dynamic>> saveGameData(String gameType, Map<String, dynamic> gameData) async {
-  try {
-  // Fetch previous game data
-  final previousData = await fetchPreviousGamesData(gameType);
+    try {
+      // Fetch previous game data
+      final previousData = await fetchPreviousGamesData(gameType);
 
-  final response = await http.post(
-  Uri.parse('$apiUrl$gameType'),
-  headers: {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer $jwtToken',
-  },
-  body: jsonEncode(gameData),
-  );
+      final response = await http.post(
+        Uri.parse('$_apiUrl$gameType'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': '$_jwtToken',
+        },
+        body: jsonEncode(gameData),
+      );
 
-  if (response.statusCode == 201) {
-  print('$gameType game data saved successfully');
-  final responseData = jsonDecode(response.body);
-  final message = responseData['message'];
+      if (response.statusCode == 201) {
+        print('$gameType game data saved successfully');
+        final responseData = jsonDecode(response.body);
+        final message = responseData['message'];
 
-  // Calculate improvement
-  double totalImprovement = 0;
-  int validGamesCount = 0;
-  for (final prevGameData in previousData) {
-  if (prevGameData.containsKey('score')) {
-  final previousScore = prevGameData['score'] as int;
-  final currentScore = gameData['score'] as int;
-  final improvement = ((currentScore - previousScore) / previousScore) * 100;
-  totalImprovement += improvement;
-  validGamesCount++;
-  }
+        // Calculate improvement
+        double totalImprovement = 0;
+        int validGamesCount = 0;
+        for (final prevGameData in previousData) {
+          if (prevGameData.containsKey('score')) {
+            final previousScore = prevGameData['score'] as int;
+            final currentScore = gameData['score'] as int;
+            final improvement = ((currentScore - previousScore) / previousScore) * 100;
+            totalImprovement += improvement;
+            validGamesCount++;
+          }
+        }
+
+        final overallImprovement = validGamesCount > 0 ? (totalImprovement / validGamesCount).toStringAsFixed(2) : 0;
+
+        return {'message': message, 'improvement': '$overallImprovement%'};
+      } else {
+        print('Failed to save $gameType game data');
+        // Handle error response
+        return {'error': 'Failed to save $gameType game data'};
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle network or server error
+      return {'error': 'An error occurred while saving game data: $e'};
+    }
   }
 
-  final overallImprovement = validGamesCount > 0 ? (totalImprovement / validGamesCount).toStringAsFixed(2) : 0;
-
-  return {'message': message, 'improvement': '$overallImprovement%'};
-  } else {
-  print('Failed to save $gameType game data');
-  // Handle error response
-  return null;
-  }
-  } catch (e) {
-  print('Error: $e');
-  // Handle network or server error
-  return null;
-  }
-  }
 
   Future<List<Map<String, dynamic>>> fetchPreviousGamesData(String gameType) async {
-  try {
-  final response = await http.get(
-  Uri.parse('$apiUrl$gameType'),
-  headers: {
-  'Authorization': 'Bearer $jwtToken',
-  },
-  );
+    try {
+      final response = await http.get(
+        Uri.parse('$_apiUrl$gameType'),
+        headers: {
+          'Authorization': '$_jwtToken',
+        },
+      );
 
-  if (response.statusCode == 200) {
-  final responseData = jsonDecode(response.body) as List;
-  // Fetch last 5 games data
-  final lastGamesData = responseData.sublist(0, previousGamesLimit);
-  return lastGamesData.cast<Map<String, dynamic>>();
-  } else {
-  print('Failed to fetch $gameType game data');
-  // Handle error response
-  return [];
-  }
-  } catch (e) {
-  print('Error: $e');
-  // Handle network or server error
-  return [];
-  }
-  }
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body) as List;
+        // Fetch last 5 games data
+        final lastGamesData = responseData.sublist(0, _previousGamesLimit);
+        return lastGamesData.cast<Map<String, dynamic>>();
+      } else {
+        print('Failed to fetch $gameType game data');
+        // Handle error response
+        return [];
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle network or server error
+      return [];
+    }
   }
 
-void main() {
-  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CognitiveAbilities(),
-    );
-  }
-}
