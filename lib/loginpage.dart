@@ -66,22 +66,23 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
+
   Future<void> fetchData() async {
-    try {
-      var response = await http.get(
-          Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'));
-      if (response.statusCode == 201) {
-        // Successful GET request
-        var jsonData = json.decode(response.body);
-        // Process jsonData as needed
-        print(jsonData);
-      } else {
-        // Handle errors
-        print('Error: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+  try {
+  var response = await http.get(Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'));
+  if (response.statusCode == 201) {
+  // Successful GET request
+  var jsonData = json.decode(response.body);
+  // Process jsonData as needed
+  print(jsonData);
+  } else {
+  // Handle errors
+  print('Error: ${response.statusCode}');
+  }
+  } catch (e) {
+  print('Error: $e');
+  }
   }
 
   @override
@@ -115,8 +116,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildEmailField(BuildContext context) {
-    // Change method name and label
+  Widget _buildEmailField(BuildContext context) { // Change method name and label
     return TextFormField(
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -193,29 +193,30 @@ class _LoginPageState extends State<LoginPage> {
         border: _isPressed
             ? null
             : Border.all(
-                color: Colors.green[200]!,
-                width: 2.0,
-              ),
+          color: Colors.green[200]!,
+          width: 2.0,
+        ),
         boxShadow: _isPressed
             ? [
-                BoxShadow(
-                  color: Colors.green[200]!.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ]
+          BoxShadow(
+            color: Colors.green[200]!.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ]
             : [],
         color: _isHovered
             ? Colors.green[200]!
-            : (_email.isNotEmpty && _password.isNotEmpty && _isPressed
-                ? Colors.green[200]!
-                : Colors.transparent),
+            : (_email.isNotEmpty &&
+            _password.isNotEmpty &&
+            _isPressed
+            ? Colors.green[200]!
+            : Colors.transparent),
       ),
       child: InkWell(
         onTap: () {
-          if (_email.isNotEmpty && _password.isNotEmpty) {
-            // Change variable name
+          if (_email.isNotEmpty && _password.isNotEmpty) { // Change variable name
             if (_rememberMe) {
               // Implement logic to save login state for "Remember Me"
             }
@@ -226,8 +227,7 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                    'Please enter both email and password.'), // Change message
+                content: Text('Please enter both email and password.'), // Change message
               ),
             );
           }
@@ -246,24 +246,26 @@ class _LoginPageState extends State<LoginPage> {
             border: _isPressed
                 ? null
                 : Border.all(
-                    color: Colors.green[200]!,
-                    width: 2.0,
-                  ),
+              color: Colors.green[200]!,
+              width: 2.0,
+            ),
             boxShadow: _isPressed
                 ? [
-                    BoxShadow(
-                      color: Colors.green[200]!.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ]
+              BoxShadow(
+                color: Colors.green[200]!.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ]
                 : [],
             color: _isHovered
                 ? Colors.green[200]!
-                : (_email.isNotEmpty && _password.isNotEmpty && _isPressed
-                    ? Colors.green[200]!
-                    : Colors.transparent),
+                : (_email.isNotEmpty &&
+                _password.isNotEmpty &&
+                _isPressed
+                ? Colors.green[200]!
+                : Colors.transparent),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
