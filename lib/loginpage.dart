@@ -7,7 +7,7 @@ import 'homepage.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  @override
+  @override 
   _LoginPageState createState() => _LoginPageState();
 }
 
@@ -18,8 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   bool _isHovered = true;
 
-  final String _baseUrl = 'https://occ-therapy-backend.onrender.com/';
-
   Future<void> loginUser() async {
     final response = await http.post(
       Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'),
@@ -27,12 +25,12 @@ class _LoginPageState extends State<LoginPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'email': _email,
+        'email': _email, // Change username to email
         'password': _password,
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // Parse response body to get JWT token
       final Map<String, dynamic> responseData = json.decode(response.body);
       final String jwtToken = responseData['token'];
@@ -41,15 +39,6 @@ class _LoginPageState extends State<LoginPage> {
       // For example:
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('jwtToken', jwtToken);
-
-      // Save remember me preference
-      if (_rememberMe) {
-        prefs.setString('email', _email);
-        prefs.setString('password', _password);
-      } else {
-        prefs.remove('email');
-        prefs.remove('password');
-      }
 
       // Navigate to home page
       Navigator.push(
@@ -64,31 +53,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-  }
-
-
-
-  Future<void> fetchData() async {
-  try {
-  var response = await http.get(Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'));
-  if (response.statusCode == 201) {
-  // Successful GET request
-  var jsonData = json.decode(response.body);
-  // Process jsonData as needed
-  print(jsonData);
-  } else {
-  // Handle errors
-  print('Error: ${response.statusCode}');
-  }
-  } catch (e) {
-  print('Error: $e');
-  }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData(); // Call fetchData when the widget is initialized
   }
 
   @override
@@ -193,26 +157,26 @@ class _LoginPageState extends State<LoginPage> {
         border: _isPressed
             ? null
             : Border.all(
-          color: Colors.green[200]!,
-          width: 2.0,
-        ),
+                color: Colors.green[200]!,
+                width: 2.0,
+              ),
         boxShadow: _isPressed
             ? [
-          BoxShadow(
-            color: Colors.green[200]!.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ]
+                BoxShadow(
+                  color: Colors.green[200]!.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ]
             : [],
         color: _isHovered
             ? Colors.green[200]!
             : (_email.isNotEmpty &&
-            _password.isNotEmpty &&
-            _isPressed
-            ? Colors.green[200]!
-            : Colors.transparent),
+                    _password.isNotEmpty &&
+                    _isPressed
+                ? Colors.green[200]!
+                : Colors.transparent),
       ),
       child: InkWell(
         onTap: () {
@@ -246,26 +210,26 @@ class _LoginPageState extends State<LoginPage> {
             border: _isPressed
                 ? null
                 : Border.all(
-              color: Colors.green[200]!,
-              width: 2.0,
-            ),
+                    color: Colors.green[200]!,
+                    width: 2.0,
+                  ),
             boxShadow: _isPressed
                 ? [
-              BoxShadow(
-                color: Colors.green[200]!.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ]
+                    BoxShadow(
+                      color: Colors.green[200]!.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ]
                 : [],
             color: _isHovered
                 ? Colors.green[200]!
                 : (_email.isNotEmpty &&
-                _password.isNotEmpty &&
-                _isPressed
-                ? Colors.green[200]!
-                : Colors.transparent),
+                        _password.isNotEmpty &&
+                        _isPressed
+                    ? Colors.green[200]!
+                    : Colors.transparent),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

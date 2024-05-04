@@ -10,13 +10,6 @@ class CognitiveAbilities extends StatefulWidget {
 }
 
 class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
-
-  int savedScore = 0;
-  int savedTimeTaken = 0;
-  int savedTrials = 0;
-  int savedCorrectGuesses = 0;
-  int savedWrongGuesses = 0;
-
   final List<String> emojis = [
     "assets/images/1.jpeg",
     "assets/images/1.jpeg",
@@ -48,8 +41,7 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   @override
   void initState() {
     super.initState();
-    shuffledEmojis = emojis.toList()
-      ..shuffle();
+    shuffledEmojis = emojis.toList()..shuffle();
     cardFlips = List<bool>.filled(emojis.length, false);
     selectedIndex = null;
     startTimer();
@@ -99,10 +91,10 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
                     child: Center(
                       child: cardFlips[index]
                           ? Image.asset(
-                        shuffledEmojis[index],
-                        width: 50,
-                        height: 50,
-                      )
+                              shuffledEmojis[index],
+                              width: 50,
+                              height: 50,
+                            )
                           : Text(''),
                     ),
                   ),
@@ -147,10 +139,11 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   }
 
   void resetGame() async {
+    // Save game data to the backend
+    await saveGameData();
 
     setState(() {
-      shuffledEmojis = emojis.toList()
-        ..shuffle();
+      shuffledEmojis = emojis.toList()..shuffle();
       cardFlips = List<bool>.filled(emojis.length, false);
       moves = 0;
       pairsFound = 0;
@@ -179,83 +172,51 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     super.dispose();
   }
 
-   String _apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/memory-match';
-   String _jwtToken = 'Bearer JWT_token'; // Replace with your JWT token
-   int _previousGamesLimit = 5; // Limit of previous games to consider
+  // Function to save game data to the backend
+  Future<void> saveGameData() async {
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/memory-match';
 
-  Future<Map<String, dynamic>> saveGameData(String gameType, Map<String, dynamic> gameData) async {
-    try {
-      // Fetch previous game data
-      final previousData = await fetchPreviousGamesData(gameType);
+    // Fetch JWT token from shared preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+  int totalTimeInSeconds = minutes * 60 + seconds;
 
-      final response = await http.post(
-        Uri.parse('$_apiUrl$gameType'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': '$_jwtToken',
-        },
-        body: jsonEncode(gameData),
-      );
+  final Map<String, dynamic> gameData = {
+    'score': pairsFound, // Assuming pairs found represents the score
+    'timeTaken': totalTimeInSeconds,
+    'trials': moves, // Assuming moves represents the number of trials
+    'correctGuesses': pairsFound, // Assuming pairs found represents correct guesses
+    'wrongGuesses': moves - pairsFound, // Assuming moves - pairs found represents wrong guesses
+    // Add other parameters as needed
+  };
 
-      if (response.statusCode == 201) {
-        print('$gameType game data saved successfully');
-        final responseData = jsonDecode(response.body);
-        final message = responseData['message'];
 
-        // Calculate improvement
-        double totalImprovement = 0;
-        int validGamesCount = 0;
-        for (final prevGameData in previousData) {
-          if (prevGameData.containsKey('score')) {
-            final previousScore = prevGameData['score'] as int;
-            final currentScore = gameData['score'] as int;
-            final improvement = ((currentScore - previousScore) / previousScore) * 100;
-            totalImprovement += improvement;
-            validGamesCount++;
-          }
-        }
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: jsonEncode(gameData),
+    );
 
-        final overallImprovement = validGamesCount > 0 ? (totalImprovement / validGamesCount).toStringAsFixed(2) : 0;
-
-        return {'message': message, 'improvement': '$overallImprovement%'};
-      } else {
-        print('Failed to save $gameType game data');
-        // Handle error response
-        return {'error': 'Failed to save $gameType game data'};
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Handle network or server error
-      return {'error': 'An error occurred while saving game data: $e'};
+    if (response.statusCode == 201) {
+      print('Memory Match game data saved successfully');
+    } else {
+      print('Failed to save Memory Match game data');
     }
   }
-
-
-  Future<List<Map<String, dynamic>>> fetchPreviousGamesData(String gameType) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$_apiUrl$gameType'),
-        headers: {
-          'Authorization': '$_jwtToken',
-        },
-      );
-
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body) as List;
-        // Fetch last 5 games data
-        final lastGamesData = responseData.sublist(0, _previousGamesLimit);
-        return lastGamesData.cast<Map<String, dynamic>>();
-      } else {
-        print('Failed to fetch $gameType game data');
-        // Handle error response
-        return [];
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Handle network or server error
-      return [];
-    }
-  }
-
 }
 
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CognitiveAbilities(),
+    );
+  }
+}

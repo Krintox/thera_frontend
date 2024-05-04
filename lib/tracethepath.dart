@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert'; // Add this import for JSON encoding
-import 'package:http/http.dart'
-as http; // Add this import for making HTTP requests
+import 'package:http/http.dart' as http; // Add this import for making HTTP requests
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import for SharedPreferences
 import 'dart:math';
 
@@ -26,8 +25,6 @@ class _TraceThePath extends State<TraceThePath> {
   int minutes = 0;
   int _secondsLeft = 0; // Change as needed
   late SharedPreferences _prefs;
-
-  String _apiBaseUrl = 'https://occ-therapy-backend.onrender.com/';
 
   @override
   void initState() {
@@ -75,360 +72,288 @@ class _TraceThePath extends State<TraceThePath> {
       _level = 1;
       _figurePath = _generateFigure(_level);
     });
-
   }
 
+  Future<void> saveGameData(double tracedPathLength) async {
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/trace-path'; // API URL
+    final String jwtToken = _prefs?.getString('jwtToken') ?? ''; // Fetch JWT token from SharedPreferences
 
-   String _apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/trace-path';
-   String _jwtToken = 'Bearer JWT_token'; // Replace with your JWT token
-   int _previousGamesLimit = 5; // Limit of previous games to consider
+    final Map<String, dynamic> gameData = {
+      'score': minutes * 60 + seconds, // Time taken in seconds
+      'progress': tracedPathLength,
+      'gameOver': _gameOver,
+      'level': _level,
+      'secondsLeft': _secondsLeft,
+      'figurePath': _figurePath.toString(), // Convert Path to string for storage
+      'isTracing': _isTracing,
+    };
 
-  Future<Map<String, dynamic>> saveGameData(Map<String, dynamic> gameData) async {
-    try {
-      // Fetch previous game data
-      final previousData = await fetchPreviousGamesData();
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      body: jsonEncode(gameData),
+    );
 
-      final response = await http.post(
-        Uri.parse(_apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': _jwtToken,
-        },
-        body: jsonEncode(gameData),
-      );
-
-      if (response.statusCode == 201) {
-        print('Trace the Path game data saved successfully');
-        final responseData = jsonDecode(response.body);
-        final message = responseData['message'];
-
-        // Calculate improvement from last game
-        double lastGameImprovement = 0;
-        if (previousData.isNotEmpty && previousData.first.containsKey('score')) {
-          final previousScore = previousData.first['score'] as int;
-          final currentScore = gameData['score'] as int;
-          lastGameImprovement = ((currentScore - previousScore) / previousScore) * 100;
-        }
-
-        // Calculate average improvement from last 5 games
-        double totalImprovement = 0;
-        int validGamesCount = 0;
-        for (final prevGameData in previousData) {
-          if (prevGameData.containsKey('score')) {
-            final previousScore = prevGameData['score'] as int;
-            final currentScore = gameData['score'] as int;
-            final improvement = ((currentScore - previousScore) / previousScore) * 100;
-            totalImprovement += improvement;
-            validGamesCount++;
-          }
-        }
-        final avgImprovement = validGamesCount > 0 ? totalImprovement / validGamesCount : 0;
-
-        return {
-          'message': message,
-          'lastGameImprovement': lastGameImprovement.toStringAsFixed(2) + '%',
-          'avgImprovementLast5Games': avgImprovement.toStringAsFixed(2) + '%',
-        };
-      } else {
-        print('Failed to save Trace the Path game data');
-        // Handle error response
-        return {'error': 'Failed to save Trace the Path game data'};
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Handle network or server error
-      return {'error': 'Error occurred: $e'};
+    if (response.statusCode == 201) {
+      print('Trace the Path game data saved successfully');
+    } else {
+      print('Failed to save Trace the Path game data');
     }
-  }
-
-  Future<List<Map<String, dynamic>>> fetchPreviousGamesData() async {
-    try {
-      final response = await http.get(
-        Uri.parse(_apiUrl),
-        headers: {
-          'Authorization': _jwtToken,
-        },
-      );
-
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body) as List;
-        // Fetch last 5 games data
-        final lastGamesData = responseData.sublist(0, _previousGamesLimit);
-        return lastGamesData.cast<Map<String, dynamic>>();
-      } else {
-        print('Failed to fetch Trace the Path game data');
-        // Handle error response
-        return [];
-      }
-    } catch (e) {
-      print('Error: $e');
-      // Handle network or server error
-      return [];
-    }
-  }
-
-  Path _parseSvgPath(String pathString) {
-    final path = Path();
-    // Use your own logic to parse the SVG path string here
-    return path;
   }
 
   @override
   Widget build(BuildContext context) {
-  return MaterialApp(
-  home: Scaffold(
-  backgroundColor: Colors.grey[900],
-  appBar: AppBar(
-  backgroundColor: Colors.green[200],
-  title: Text('Trace the Symbol - Level $_level'),
-  actions: [
-  IconButton(
-  icon: Icon(Icons.refresh),
-  onPressed: resetGame,
-  ),
-  IconButton(
-  icon: Icon(Icons.info),
-  onPressed: () {
-  // Show instructions popup
-  showDialog(
-  context: context,
-  builder: (context) => AlertDialog(
-  backgroundColor: Colors.green[200], // Set background color
-  title: Text('Instructions'),
-  content: Text(
-  'Trace the symbol without lifting your finger.',
-  ),
-  actions: [
-  TextButton(
-  onPressed: () => Navigator.pop(context),
-  child: Text('OK'),
-  ),
-  ],
-  ),
-  );
-  },
-  ),
-  ],
-  bottom: PreferredSize(
-  preferredSize:
-  Size.fromHeight(40.0), // Set the height of the PreferredSize
-  child: Center(
-  child: Text(
-  "Time: $minutes:$seconds",
-  style: TextStyle(
-  color: Colors.black,
-  fontSize: 20.0,
-  ),
-  ),
-  ),
-  ),
-  ),
-  body: Center(
-  child: Stack(
-  children: [
-  // Symbol drawing
-  CustomPaint(
-  size: Size(MediaQuery.of(context).size.width * 0.8,
-  MediaQuery.of(context).size.height * 0.5),
-  painter: SymbolPainter(symbolPath: _figurePath),
-  ),
-  // Tracing area with instructions
-  Positioned(
-  bottom: 20,
-  left: 0,
-  right: 0,
-  child: Center(
-  child: Text(
-  'Trace the symbol without lifting your finger.',
-  style: TextStyle(
-  fontSize: 18.0,
-  color: Colors.white,
-  ),
-  ),
-  ),
-  ),
-  GestureDetector(
-  onPanStart: (details) {
-  setState(() {
-  if (_gameOver) return;
-  _isTracing = true;
-  _currentPath = Path(); // Clear the user's tracing path
-  _currentPath.moveTo(
-  details.localPosition.dx, details.localPosition.dy);
-  });
-  },
-  onPanUpdate: (details) {
-  setState(() {
-  if (_gameOver) return;
-  _currentPath.lineTo(
-  details.localPosition.dx, details.localPosition.dy);
-  });
-  },
-  onPanEnd: (details) async {
-  setState(() {
-  _isTracing = false;
-  if (!_gameOver && _checkWinCondition()) {
-  _level++;
-  if (_level <= 3) {
-  _figurePath = _generateFigure(
-  _level); // Generate the new figure path
-  _secondsLeft = 0; // Reset timer for the next level
-  startTimer(); // Start timer for the next level
-  } else {
-  // Game completed
-  gameOver();
-  // Add logic to display
-  }
-  }
-  });
-  // Calculate length of traced path
-  double tracedPathLength = calculatePathLength(_currentPath);
-  // Save
-  },
-  child: Container(
-  width: MediaQuery.of(context).size.width * 0.8,
-  height: MediaQuery.of(context).size.height * 0.5,
-  child: Stack(
-  children: [
-  // Traced path
-  CustomPaint(
-  size: Size.infinite,
-  painter: PathPainter(
-  path: _currentPath,
-  strokeWidth: 5.0), // Set stroke width to 5.0
-  ),
-  // Game over message
-  if (_gameOver)
-  Center(
-  child: Text(
-  'Game Over!',
-  style: TextStyle(
-  fontSize: 24.0,
-  fontWeight: FontWeight.bold,
-  color: Colors.white,
-  ),
-  ),
-  ),
-  ],
-  ),
-  ),
-  ),
-  ],
-  ),
-  ),
-  ),
-  );
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.grey[900],
+        appBar: AppBar(
+          backgroundColor: Colors.green[200],
+          title: Text('Trace the Symbol - Level $_level'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: resetGame,
+            ),
+            IconButton(
+              icon: Icon(Icons.info),
+              onPressed: () {
+                // Show instructions popup
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: Colors.green[200], // Set background color
+                    title: Text('Instructions'),
+                    content: Text(
+                      'Trace the symbol without lifting your finger.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(40.0), // Set the height of the PreferredSize
+            child: Center(
+              child: Text(
+                "Time: $minutes:$seconds",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ),
+        ),
+        body: Center(
+          child: Stack(
+            children: [
+              // Symbol drawing
+              CustomPaint(
+                size: Size(MediaQuery.of(context).size.width * 0.8, MediaQuery.of(context).size.height * 0.5),
+                painter: SymbolPainter(symbolPath: _figurePath),
+              ),
+              // Tracing area with instructions
+              Positioned(
+                bottom: 20,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Text(
+                    'Trace the symbol without lifting your finger.',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onPanStart: (details) {
+                  setState(() {
+                    if (_gameOver) return;
+                    _isTracing = true;
+                    _currentPath = Path(); // Clear the user's tracing path
+                    _currentPath.moveTo(details.localPosition.dx, details.localPosition.dy);
+                  });
+                },
+                onPanUpdate: (details) {
+                  setState(() {
+                    if (_gameOver) return;
+                    _currentPath.lineTo(details.localPosition.dx, details.localPosition.dy);
+                  });
+                },
+                onPanEnd: (details) async {
+                  setState(() {
+                    _isTracing = false;
+                    if (!_gameOver && _checkWinCondition()) {
+                      _level++;
+                      if (_level <= 3) {
+                        _figurePath = _generateFigure(_level); // Generate the new figure path
+                        _secondsLeft = 0; // Reset timer for the next level
+                        startTimer(); // Start timer for the next level
+                      } else {
+                        // Game completed
+                        gameOver();
+                        // Add logic to display
+                      }
+                    }
+                  });
+                  // Calculate length of traced path
+                  double tracedPathLength = calculatePathLength(_currentPath);
+                  // Save game data when tracing ends
+                  await saveGameData(tracedPathLength);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: Stack(
+                    children: [
+                      // Traced path
+                      CustomPaint(
+                        size: Size.infinite,
+                        painter: PathPainter(path: _currentPath, strokeWidth: 5.0), // Set stroke width to 5.0
+                      ),
+                      // Game over message
+                      if (_gameOver)
+                        Center(
+                          child: Text(
+                            'Game Over!',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   bool _checkWinCondition() {
-  // Implement logic to check if the traced path meets the figure
-  // For now, we'll just return true after a few seconds to simulate winning
-  Future.delayed(Duration(seconds: 3), () {
-  setState(() {});
-  });
-  return true;
+    // Implement logic to check if the traced path meets the figure
+    // For now, we'll just return true after a few seconds to simulate winning
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {});
+    });
+    return true;
   }
 
   Path _generateFigure(int level) {
-  switch (level) {
-  case 1:
-  return Path()
-  ..moveTo(100, 100)
-  ..lineTo(200, 100)
-  ..lineTo(200, 200)
-  ..lineTo(100, 200)
-  ..lineTo(100, 150)
-  ..lineTo(150, 150)
-  ..lineTo(150, 200)
-  ..close(); // Square
-  case 2:
-  return Path()
-  ..moveTo(100, 100)
-  ..quadraticBezierTo(150, 50, 200, 100) // Custom curved path
-  ..quadraticBezierTo(250, 150, 200, 200)
-  ..quadraticBezierTo(150, 250, 100, 200)
-  ..quadraticBezierTo(50, 150, 100, 100)
-  ..quadraticBezierTo(150, 150, 200, 150)
-  ..quadraticBezierTo(250, 100, 200, 50)
-  ..quadraticBezierTo(150, 0, 100, 50)
-  ..quadraticBezierTo(50, 100, 100, 150)
-  ..lineTo(150, 150)
-  ..lineTo(150, 200)
-  ..close(); // Custom curved shape with more curves
-  case 3:
-  return Path()
-  ..moveTo(100, 100)
-  ..lineTo(200, 100)
-  ..lineTo(200, 200)
-  ..lineTo(100, 200)
-  ..lineTo(100, 150)
-  ..lineTo(150, 150)
-  ..lineTo(150, 200)
-  ..lineTo(200, 200)
-  ..lineTo(200, 250)
-  ..lineTo(150, 250)
-  ..lineTo(150, 200)
-  ..lineTo(100, 200)
-  ..lineTo(100, 250)
-  ..lineTo(50, 250)
-  ..lineTo(50, 200)
-  ..lineTo(100, 200)
-  ..lineTo(100, 150)
-  ..lineTo(50, 150)
-  ..lineTo(50, 100)
-  ..lineTo(100, 100)
-  ..quadraticBezierTo(150, 50, 200, 100) // Custom curved path
-  ..quadraticBezierTo(250, 150, 200, 200)
-  ..quadraticBezierTo(150, 250, 100, 200)
-  ..quadraticBezierTo(50, 150, 100, 100)
-  ..close(); // Complex shape with more lines and curves
-  case 4:
-  return _generateComplexFigure();
-  default:
-  return Path(); // Empty path for levels beyond 4
-  }
+    switch (level) {
+      case 1:
+        return Path()
+          ..moveTo(100, 100)
+          ..lineTo(200, 100)
+          ..lineTo(200, 200)
+          ..lineTo(100, 200)
+          ..lineTo(100, 150)
+          ..lineTo(150, 150)
+          ..lineTo(150, 200)
+          ..close(); // Square
+      case 2:
+        return Path()
+          ..moveTo(100, 100)
+          ..quadraticBezierTo(150, 50, 200, 100) // Custom curved path
+          ..quadraticBezierTo(250, 150, 200, 200)
+          ..quadraticBezierTo(150, 250, 100, 200)
+          ..quadraticBezierTo(50, 150, 100, 100)
+          ..quadraticBezierTo(150, 150, 200, 150)
+          ..quadraticBezierTo(250, 100, 200, 50)
+          ..quadraticBezierTo(150, 0, 100, 50)
+          ..quadraticBezierTo(50, 100, 100, 150)
+          ..lineTo(150, 150)
+          ..lineTo(150, 200)
+          ..close(); // Custom curved shape with more curves
+      case 3:
+        return Path()
+          ..moveTo(100, 100)
+          ..lineTo(200, 100)
+          ..lineTo(200, 200)
+          ..lineTo(100, 200)
+          ..lineTo(100, 150)
+          ..lineTo(150, 150)
+          ..lineTo(150, 200)
+          ..lineTo(200, 200)
+          ..lineTo(200, 250)
+          ..lineTo(150, 250)
+          ..lineTo(150, 200)
+          ..lineTo(100, 200)
+          ..lineTo(100, 250)
+          ..lineTo(50, 250)
+          ..lineTo(50, 200)
+          ..lineTo(100, 200)
+          ..lineTo(100, 150)
+          ..lineTo(50, 150)
+          ..lineTo(50, 100)
+          ..lineTo(100, 100)
+          ..quadraticBezierTo(150, 50, 200, 100) // Custom curved path
+          ..quadraticBezierTo(250, 150, 200, 200)
+          ..quadraticBezierTo(150, 250, 100, 200)
+          ..quadraticBezierTo(50, 150, 100, 100)
+          ..close(); // Complex shape with more lines and curves
+      case 4:
+        return _generateComplexFigure();
+      default:
+        return Path(); // Empty path for levels beyond 4
+    }
   }
 
   Path _generateComplexFigure() {
-  Path path = Path();
+    Path path = Path();
 
-  // Random number generator for creating varying shapes
-  Random random = Random();
+    // Random number generator for creating varying shapes
+    Random random = Random();
 
-  // Move to a random starting point within the canvas bounds
-  path.moveTo(random.nextDouble() * 400, random.nextDouble() * 300);
+    // Move to a random starting point within the canvas bounds
+    path.moveTo(random.nextDouble() * 400, random.nextDouble() * 300);
 
-  // Generate a series of random curves, lines, and shapes
-  for (int i = 0; i < 10; i++) {
-  double controlX1 = random.nextDouble() * 400;
-  double controlY1 = random.nextDouble() * 300;
-  double controlX2 = random.nextDouble() * 400;
-  double controlY2 = random.nextDouble() * 300;
-  double endX = random.nextDouble() * 400;
-  double endY = random.nextDouble() * 300;
+    // Generate a series of random curves, lines, and shapes
+    for (int i = 0; i < 10; i++) {
+      double controlX1 = random.nextDouble() * 400;
+      double controlY1 = random.nextDouble() * 300;
+      double controlX2 = random.nextDouble() * 400;
+      double controlY2 = random.nextDouble() * 300;
+      double endX = random.nextDouble() * 400;
+      double endY = random.nextDouble() * 300;
 
-  // Randomly choose between quadratic and cubic Bezier curves
-  if (random.nextBool()) {
-  path.quadraticBezierTo(controlX1, controlY1, endX, endY);
-  } else {
-  path.cubicTo(controlX1, controlY1, controlX2, controlY2, endX, endY);
-  }
-  }
+      // Randomly choose between quadratic and cubic Bezier curves
+      if (random.nextBool()) {
+        path.quadraticBezierTo(controlX1, controlY1, endX, endY);
+      } else {
+        path.cubicTo(controlX1, controlY1, controlX2, controlY2, endX, endY);
+      }
+    }
 
-  // Close the path to create a closed shape
-  path.close();
+    // Close the path to create a closed shape
+    path.close();
 
-  return path;
+    return path;
   }
 
   // Function to calculate the length of a path
   double calculatePathLength(Path path) {
-  final metrics = path.computeMetrics();
-  double length = 0.0;
-  for (final metric in metrics) {
-  length += metric.length;
-  }
-  return length;
+    final metrics = path.computeMetrics();
+    double length = 0.0;
+    for (final metric in metrics) {
+      length += metric.length;
+    }
+    return length;
   }
 }
 
@@ -455,9 +380,7 @@ class PathPainter extends CustomPainter {
   final Path path;
   final double strokeWidth;
 
-  const PathPainter(
-      {required this.path,
-        this.strokeWidth = 1.0}); // Default stroke width set to 1.0
+  const PathPainter({required this.path, this.strokeWidth = 1.0}); // Default stroke width set to 1.0
 
   @override
   void paint(Canvas canvas, Size size) {
