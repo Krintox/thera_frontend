@@ -174,7 +174,7 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
 
   // Function to save game data to the backend
   Future<void> saveGameData() async {
-    final String apiUrl = 'http://localhost:8900/api/games/memory-match';
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/memory-match';
 
     // Fetch JWT token from shared preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();

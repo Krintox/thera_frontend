@@ -27,7 +27,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future<void> _updateUsername(String newUsername) async {
-    final String apiUrl = 'http://localhost:8900/api/user/update-username';
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/user/update-username';
     final String jwtToken = _prefs.getString('jwtToken') ?? '';
 
     final Map<String, dynamic> data = {'username': newUsername};
@@ -52,7 +52,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future<void> _updateEmail(String newEmail) async {
-    final String apiUrl = 'http://localhost:8900/api/user/update-email';
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/user/update-email';
     final String jwtToken = _prefs.getString('jwtToken') ?? '';
 
     final Map<String, dynamic> data = {'email': newEmail};
@@ -77,7 +77,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Future<void> _updatePassword(String newPassword) async {
-    final String apiUrl = 'http://localhost:8900/api/user/update-password';
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/user/update-password';
     final String jwtToken = _prefs.getString('jwtToken') ?? '';
 
     final Map<String, dynamic> data = {'password': newPassword};

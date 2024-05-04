@@ -113,7 +113,7 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
     }
 
     final response = await http.post(
-      Uri.parse('http://localhost:8900/api/games/sound-matching'),
+      Uri.parse('https://occ-therapy-backend.onrender.com/api/games/sound-matching'),
       headers: {
         'Authorization': 'Bearer $jwtToken',
         'Content-Type': 'application/json',

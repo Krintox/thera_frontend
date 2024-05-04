@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> loginUser() async {
     final response = await http.post(
-      Uri.parse('http://localhost:8900/api/auth/login'),
+      Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

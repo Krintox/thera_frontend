@@ -75,7 +75,7 @@ class _TraceThePath extends State<TraceThePath> {
   }
 
   Future<void> saveGameData(double tracedPathLength) async {
-    final String apiUrl = 'http://localhost:8900/api/games/trace-path'; // API URL
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/games/trace-path'; // API URL
     final String jwtToken = _prefs?.getString('jwtToken') ?? ''; // Fetch JWT token from SharedPreferences
 
     final Map<String, dynamic> gameData = {

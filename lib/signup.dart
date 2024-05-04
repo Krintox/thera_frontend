@@ -20,7 +20,7 @@ class _SignUpState extends State<SignUp> {
 
   Future<void> registerUser() async {
     final response = await http.post(
-      Uri.parse('http://localhost:8900/api/auth/register'),
+      Uri.parse('https://occ-therapy-backend.onrender.com/api/auth/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -32,7 +32,7 @@ class _SignUpState extends State<SignUp> {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // User registered successfully, navigate to next screen
       Navigator.push(
         context,
