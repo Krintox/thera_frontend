@@ -64,11 +64,11 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildDashboardItem(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildDashboardItem(String title, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Card(
-        color: Colors.green[300], // Set the card color to green[300]
+        color: color, // Use the provided color for the card
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -100,46 +100,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
       appBar: AppBar(
         title: Text('Dashboard'),
-        backgroundColor: Colors.green[300],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.green[300],
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Settings'),
-              onTap: _navigateToSettings, // Connect Settings button to SettingsPage
-            ),
-            // Add more ListTile items for navigation
-          ],
-        ),
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        padding: EdgeInsets.all(18.0),
         children: [
-          _buildDashboardItem('Fine Motor Skills', Icons.brush, _navigateToFineMotorSkills),
-          _buildDashboardItem('Cognitive Abilities', Icons.lightbulb, _navigateToCognitiveAbilities),
-          _buildDashboardItem('Sensory Integration', Icons.touch_app, _navigateToSensoryIntegration),
-          _buildDashboardItem('Progress Tracking', Icons.trending_up, _navigateToProgressTracking),
-          _buildDashboardItem('Goal Setting', Icons.checklist, _navigateToGoalSetting),
-          _buildDashboardItem('Trace the Path', Icons.timeline, _navigateToTracePath), // Add Trace the Path item
-          // Add more dashboard items as needed
+          _buildDashboardItem('Fine Motor Skills', Icons.build, Colors.pink[100]!, _navigateToFineMotorSkills),
+          _buildDashboardItem('Cognitive Abilities', Icons.lightbulb, Colors.lightBlue[200]!, _navigateToCognitiveAbilities),
+          _buildDashboardItem('Trace The Path', Icons.alt_route, Colors.yellow[200]!, _navigateToTracePath),
+          _buildDashboardItem('Sensory Integration', Icons.speaker, Colors.lightGreen[200]!, _navigateToSensoryIntegration),
+          _buildDashboardItem('Goal Setting', Icons.flag, Colors.deepPurple[200]!, _navigateToGoalSetting),
+          _buildDashboardItem('Progress Tracking', Icons.timeline, Colors.amber[200]!, _navigateToProgressTracking),
+          _buildDashboardItem('Settings', Icons.settings, Colors.teal[200]!, _navigateToSettings),
         ],
       ),
     );
