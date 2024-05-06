@@ -47,6 +47,7 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     cardFlips = List<bool>.filled(emojis.length, false);
     selectedIndex = null;
     startTimer();
+    showInstructionsDialog(context);
   }
 
   @override
@@ -79,13 +80,6 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Game Instructions Button
-            ElevatedButton(
-              onPressed: () {
-                showInstructionsDialog();
-              },
-              child: Text('Show Instructions'),
-            ),
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -222,25 +216,25 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     }
   }
 
-  void showInstructionsDialog() {
+ void showInstructionsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Game Instructions"),
-          content: Text("Match the tiles to find pairs."),
+          content: Text(
+              "Match pairs of tiles by flipping them over two at a time."),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                startTimer(); // Start the timer when the user starts the game
               },
-              child: Text("Start Game"),
+              child: Text("Close"),
             ),
           ],
         );
       },
     );
   }
-
+}
 }
