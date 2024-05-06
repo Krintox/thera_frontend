@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class CognitiveAbilities extends StatefulWidget {
@@ -11,22 +11,22 @@ class CognitiveAbilities extends StatefulWidget {
 
 class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   final List<String> emojis = [
-    "assets/images/1.jpeg",
-    "assets/images/1.jpeg",
-    "assets/images/2.jpeg",
-    "assets/images/2.jpeg",
-    "assets/images/3.jpeg",
-    "assets/images/3.jpeg",
-    "assets/images/4.jpeg",
-    "assets/images/4.jpeg",
-    "assets/images/5.jpeg",
-    "assets/images/5.jpeg",
-    "assets/images/6.jpeg",
-    "assets/images/6.jpeg",
-    "assets/images/7.jpeg",
-    "assets/images/7.jpeg",
-    "assets/images/8.jpeg",
-    "assets/images/8.jpeg",
+    "assets/images/1.jpg",
+    "assets/images/1.jpg",
+    "assets/images/2.jpg",
+    "assets/images/2.jpg",
+    "assets/images/3.jpg",
+    "assets/images/3.jpg",
+    "assets/images/4.jpg",
+    "assets/images/4.jpg",
+    "assets/images/5.jpg",
+    "assets/images/5.jpg",
+    "assets/images/6.jpg",
+    "assets/images/6.jpg",
+    "assets/images/7.jpg",
+    "assets/images/7.jpg",
+    "assets/images/8.jpg",
+    "assets/images/8.jpg",
   ];
 
   late List<String> shuffledEmojis;
@@ -37,11 +37,13 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   late Timer timer;
   int seconds = 0;
   int minutes = 0;
+  bool showInstructions = false; // Track if instructions dialog should be shown
 
   @override
   void initState() {
     super.initState();
-    shuffledEmojis = emojis.toList()..shuffle();
+    shuffledEmojis = emojis.toList()
+      ..shuffle();
     cardFlips = List<bool>.filled(emojis.length, false);
     selectedIndex = null;
     startTimer();
@@ -50,10 +52,11 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: Text('Matching Tiles Game'),
-          backgroundColor: Colors.green[200],
+          backgroundColor: Colors.lightBlue[200],
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -72,10 +75,17 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
             ),
           ),
         ),
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Game Instructions Button
+            ElevatedButton(
+              onPressed: () {
+                showInstructionsDialog();
+              },
+              child: Text('Show Instructions'),
+            ),
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -87,14 +97,14 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
                 return InkWell(
                   onTap: () => handleCardTap(index),
                   child: Card(
-                    color: Colors.green[200],
+                    color: Colors.lightBlue[200],
                     child: Center(
                       child: cardFlips[index]
                           ? Image.asset(
-                              shuffledEmojis[index],
-                              width: 50,
-                              height: 50,
-                            )
+                        shuffledEmojis[index],
+                        width: 50,
+                        height: 50,
+                      )
                           : Text(''),
                     ),
                   ),
@@ -143,7 +153,8 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     await saveGameData();
 
     setState(() {
-      shuffledEmojis = emojis.toList()..shuffle();
+      shuffledEmojis = emojis.toList()
+        ..shuffle();
       cardFlips = List<bool>.filled(emojis.length, false);
       moves = 0;
       pairsFound = 0;
@@ -179,16 +190,20 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
     // Fetch JWT token from shared preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String jwtToken = prefs.getString('jwtToken') ?? '';
-  int totalTimeInSeconds = minutes * 60 + seconds;
+    int totalTimeInSeconds = minutes * 60 + seconds;
 
-  final Map<String, dynamic> gameData = {
-    'score': pairsFound, // Assuming pairs found represents the score
-    'timeTaken': totalTimeInSeconds,
-    'trials': moves, // Assuming moves represents the number of trials
-    'correctGuesses': pairsFound, // Assuming pairs found represents correct guesses
-    'wrongGuesses': moves - pairsFound, // Assuming moves - pairs found represents wrong guesses
-    // Add other parameters as needed
-  };
+    final Map<String, dynamic> gameData = {
+      'score': pairsFound,
+      // Assuming pairs found represents the score
+      'timeTaken': totalTimeInSeconds,
+      'trials': moves,
+      // Assuming moves represents the number of trials
+      'correctGuesses': pairsFound,
+      // Assuming pairs found represents correct guesses
+      'wrongGuesses': moves - pairsFound,
+      // Assuming moves - pairs found represents wrong guesses
+      // Add other parameters as needed
+    };
 
 
     final response = await http.post(
@@ -206,17 +221,26 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
       print('Failed to save Memory Match game data');
     }
   }
-}
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CognitiveAbilities(),
+  void showInstructionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Game Instructions"),
+          content: Text("Match the tiles to find pairs."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                startTimer(); // Start the timer when the user starts the game
+              },
+              child: Text("Start Game"),
+            ),
+          ],
+        );
+      },
     );
   }
+
 }
