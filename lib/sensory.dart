@@ -265,7 +265,7 @@ class SoundOptionCard extends StatelessWidget {
 
   void playSound(String sound) async {
     final player = AudioPlayer();
-    await player.play(AssetSource('sounds/assets_note1.wav'));
+    await player.play(AssetSource('assets/sounds/asset_note1.wav'));
   }
 
 }
