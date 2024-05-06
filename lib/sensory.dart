@@ -20,6 +20,22 @@ class SoundMatchingGame extends StatelessWidget {
   }
 }
 
+class SoundMatchingGame extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.lightGreen[200],
+          title: Text('Sensory Integration'),
+        ),
+        body: SoundMatchingGameScreen(),
+      ),
+    );
+  }
+}
+
 class SoundMatchingGameScreen extends StatefulWidget {
   @override
   _SoundMatchingGameScreenState createState() =>
@@ -27,11 +43,10 @@ class SoundMatchingGameScreen extends StatefulWidget {
 }
 
 class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
-  List<String> soundOptions = ['Sound 1', 'Sound 2', 'Sound 3', 'Sound 4'];
+  List<String> soundOptions = ['notes_1', 'notes_2', 'notes_3', 'notes_4'];
   List<String> shuffledOptions = [];
   String selectedSound1 = '';
   String selectedSound2 = '';
-
   late Timer timer;
   int seconds = 0;
   int minutes = 0;
@@ -92,9 +107,8 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
 
   void checkMatch() {
     if (selectedSound1.isNotEmpty && selectedSound2.isNotEmpty) {
-      if (selectedSound1 == 'Sound 1' && selectedSound2 == 'Sound 1') {
+      if (selectedSound1 == 'notes_1' && selectedSound2 == 'notes_1') {
         int totalTimeInSeconds = minutes * 60 + seconds;
-        saveSoundMatchingGameData(totalTimeInSeconds);
       } else {
         print('No match found!');
       }
@@ -102,6 +116,7 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
       print('Please select sounds in both columns to check match.');
     }
   }
+
 
   Future<void> saveSoundMatchingGameData(int timeTaken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -144,13 +159,13 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
           SizedBox(height: 20),
           Text(
             'Time: $minutes:$seconds',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(fontSize: 18, color: Colors.black),
           ),
           SizedBox(height: 20),
           Row(
@@ -164,28 +179,33 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
                       sound: sound,
                       onSelectSound: selectSound1,
                       isSelected: selectedSound1 == sound,
+                      label: sound, // Pass the sound as label for now
                     ),
                   );
                 }).toList(),
               ),
               Column(
-                children: shuffledOptions.map((sound) {
+                children: List.generate(shuffledOptions.length, (index) {
+                  final sound = shuffledOptions[index];
+                  final soundLabel = String.fromCharCode(index + 65);
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: SoundOptionCard(
                       sound: sound,
                       onSelectSound: selectSound2,
                       isSelected: selectedSound2 == sound,
+                      label: soundLabel,
                     ),
                   );
-                }).toList(),
+                }),
               ),
             ],
           ),
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              if (selectedSound1 == 'Sound 1' && selectedSound2 == 'Sound 1') {
+              if (selectedSound1 == 'notes_1' &&
+                  selectedSound2 == 'notes_1') {
                 checkMatch();
               } else {
                 print('Please match all options before checking.');
@@ -209,32 +229,56 @@ class SoundOptionCard extends StatelessWidget {
   final String sound;
   final Function(String) onSelectSound;
   final bool isSelected;
+  final String label;
 
   const SoundOptionCard({
     Key? key,
     required this.sound,
     required this.onSelectSound,
     required this.isSelected,
+    required this.label,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onSelectSound(sound),
+      onTap: () {
+        onSelectSound(sound);
+        playSound(sound); // Call playSound here
+      },
       child: Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green[300] : Colors.green[200],
+          color: isSelected ? Colors.lightGreen[200] : Colors.lightGreen[300],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(
-          sound,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              sound,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+
+  void playSound(String sound) async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/note1.wave'));
+  }
+
 }
