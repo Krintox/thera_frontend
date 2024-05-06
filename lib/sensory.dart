@@ -89,17 +89,20 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
     });
   }
 
-  void checkMatch() {
-    if (selectedSound1.isNotEmpty && selectedSound2.isNotEmpty) {
-      if (selectedSound1 == 'notes_1' && selectedSound2 == 'notes_1') {
-        int totalTimeInSeconds = minutes * 60 + seconds;
-      } else {
-        print('No match found!');
-      }
+void checkMatch() {
+  if (selectedSound1.isNotEmpty && selectedSound2.isNotEmpty) {
+    if (selectedSound1 == selectedSound2) {
+      int totalTimeInSeconds = minutes * 60 + seconds;
+      // Call the method to save the game data here if needed
+      saveSoundMatchingGameData(totalTimeInSeconds);
     } else {
-      print('Please select sounds in both columns to check match.');
+      print('No match found!');
     }
+  } else {
+    print('Please select sounds in both columns to check match.');
   }
+}
+
 
 
   Future<void> saveSoundMatchingGameData(int timeTaken) async {
