@@ -9,9 +9,9 @@ class SoundMatchingGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.green[200],
+          backgroundColor: Colors.lightGreen[200],
           title: Text('Sensory Integration'),
         ),
         body: SoundMatchingGameScreen(),
