@@ -12,7 +12,7 @@ class SoundMatchingGame extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.lightGreen[200],
-          title: Text('Sensory Integration'),
+          title: Text('Sound Matching Game'),
         ),
         body: SoundMatchingGameScreen(),
       ),
@@ -141,15 +141,6 @@ void checkMatch() {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Sound Matching Game',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 20),
           Text(
             'Time: $minutes:$seconds',
             style: TextStyle(fontSize: 18, color: Colors.black),
