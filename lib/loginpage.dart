@@ -7,7 +7,7 @@ import 'homepage.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  @override 
+  @override
   _LoginPageState createState() => _LoginPageState();
 }
 
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.blueGrey[100],
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -82,12 +82,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildEmailField(BuildContext context) { // Change method name and label
     return TextFormField(
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: 'Email', // Change label to "Email"
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.green[200]!),
+          borderSide: BorderSide(color: Colors.black!),
         ),
       ),
       onChanged: (value) {
@@ -100,13 +100,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildPasswordField(BuildContext context) {
     return TextFormField(
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       obscureText: true, // Hide the password input
       decoration: InputDecoration(
         labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.green[200]!),
+          borderSide: BorderSide(color: Colors.black!),
         ),
       ),
       onChanged: (value) {
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Text(
           'Forgot Password?',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         Row(
           children: [
@@ -135,12 +135,12 @@ class _LoginPageState extends State<LoginPage> {
                   _rememberMe = value!;
                 });
               },
-              checkColor: Colors.white,
-              fillColor: MaterialStateProperty.all<Color>(Colors.green[200]!),
+              checkColor: Colors.black,
+              fillColor: MaterialStateProperty.all<Color>(Colors.purple[200]!),
             ),
             Text(
               'Remember Me',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           ],
         ),
@@ -157,30 +157,30 @@ class _LoginPageState extends State<LoginPage> {
         border: _isPressed
             ? null
             : Border.all(
-                color: Colors.green[200]!,
-                width: 2.0,
-              ),
+          color: Colors.purple[200]!,
+          width: 2.0,
+        ),
         boxShadow: _isPressed
             ? [
-                BoxShadow(
-                  color: Colors.green[200]!.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ]
+          BoxShadow(
+            color: Colors.purple[200]!.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ]
             : [],
         color: _isHovered
-            ? Colors.green[200]!
+            ? Colors.purple[200]!
             : (_email.isNotEmpty &&
-                    _password.isNotEmpty &&
-                    _isPressed
-                ? Colors.green[200]!
-                : Colors.transparent),
+            _password.isNotEmpty &&
+            _isPressed
+            ? Colors.purple[100]!
+            : Colors.transparent),
       ),
       child: InkWell(
         onTap: () {
-          if (_email.isNotEmpty && _password.isNotEmpty) { // Change variable name
+          if (_email.isNotEmpty && _password.isNotEmpty) {
             if (_rememberMe) {
               // Implement logic to save login state for "Remember Me"
             }
@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Please enter both email and password.'), // Change message
+                content: Text('Please enter both email and password.'),
               ),
             );
           }
@@ -210,34 +210,39 @@ class _LoginPageState extends State<LoginPage> {
             border: _isPressed
                 ? null
                 : Border.all(
-                    color: Colors.green[200]!,
-                    width: 2.0,
-                  ),
+              color: Colors.purple[200]!,
+              width: 2.0,
+            ),
             boxShadow: _isPressed
                 ? [
-                    BoxShadow(
-                      color: Colors.green[200]!.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ]
+              BoxShadow(
+                color: Colors.purple[200]!.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ]
                 : [],
             color: _isHovered
-                ? Colors.green[200]!
+                ? Colors.purple[200]!
                 : (_email.isNotEmpty &&
-                        _password.isNotEmpty &&
-                        _isPressed
-                    ? Colors.green[200]!
-                    : Colors.transparent),
+                _password.isNotEmpty &&
+                _isPressed
+                ? Colors.purple[200]!
+                : Colors.transparent),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                Icons.login,
+                color: _isPressed ? Colors.black : Colors.black,
+              ),
+              SizedBox(width: 10.0),
               Text(
                 'Login',
                 style: TextStyle(
-                  color: _isPressed ? Colors.white : Colors.white,
+                  color: _isPressed ? Colors.black : Colors.black,
                   fontSize: 16.0,
                 ),
               ),
