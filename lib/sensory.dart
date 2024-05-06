@@ -20,22 +20,6 @@ class SoundMatchingGame extends StatelessWidget {
   }
 }
 
-class SoundMatchingGame extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.lightGreen[200],
-          title: Text('Sensory Integration'),
-        ),
-        body: SoundMatchingGameScreen(),
-      ),
-    );
-  }
-}
-
 class SoundMatchingGameScreen extends StatefulWidget {
   @override
   _SoundMatchingGameScreenState createState() =>
