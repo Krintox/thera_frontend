@@ -8,15 +8,15 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class GameData {
   final String gameName;
   final double score;
-  final String? param1;
-  final String? param2;
-  final String? param3;
+  final double progress;
+  final bool gameOver;
   final int? timeTaken;
   final int? trials;
   final int? correctGuesses;
   final int? wrongGuesses;
-  final double? progress;
-  final bool? gameOver;
+  final String? param1;
+  final String? param2;
+  final String? param3;
   final String? level;
   final String? secondsLeft;
   final String? figurePath;
@@ -25,15 +25,15 @@ class GameData {
   GameData({
     required this.gameName,
     required this.score,
-    this.param1,
-    this.param2,
-    this.param3,
+    required this.progress,
+    required this.gameOver,
     this.timeTaken,
     this.trials,
     this.correctGuesses,
     this.wrongGuesses,
-    this.progress,
-    this.gameOver,
+    this.param1,
+    this.param2,
+    this.param3,
     this.level,
     this.secondsLeft,
     this.figurePath,
@@ -49,7 +49,9 @@ class ProgressTracking extends StatefulWidget {
 }
 
 class _ProgressTrackingState extends State<ProgressTracking> {
-  List<GameData> historicalData = [];
+  List<GameData> memoryMatchData = [];
+  List<GameData> soundMatchingData = [];
+  List<GameData> traceThePathData = [];
 
   @override
   void initState() {
@@ -89,47 +91,71 @@ class _ProgressTrackingState extends State<ProgressTracking> {
             // Parse the JSON response
             final List<dynamic> gamesData = json.decode(gameDetailsResponse.body);
 
-            // Log fetched data into the console
-            print('Games Data:');
-            print(gamesData);
+            // Clear previous data
+            memoryMatchData.clear();
+            soundMatchingData.clear();
+            traceThePathData.clear();
 
-            // Update your UI with the fetched data
-            setState(() {
-              // Clear previous data
-              historicalData.clear();
+            // Iterate over each game data and add it to the respective lists
+            gamesData.forEach((game) {
+              String gameName = game['gameName'] ?? '';
+              double score = (gameName == 'memory-match' || gameName == 'sound-matching') ? double.tryParse(game['score'].toString()) ?? 0.0 : 0.0;
+              double progress = double.tryParse(game['progress'].toString()) ?? 0.0;
+              bool gameOver = game['gameOver'] ?? false;
+              String? level = game['level'];
+              String? secondsLeft = game['secondsLeft'];
+              String? figurePath = game['figurePath'];
+              bool? isTracing = game['isTracing'];
 
-              // Iterate over each game data and add it to historicalData
-              gamesData.forEach((game) {
-                String gameName = game['gameName'];
-                double score = game['score'].toDouble();
-
-                // Extract unique parameters for each game
-                String? param1 = game['param1'];
-                String? param2 = game['param2'];
-                String? param3 = game['param3'];
+              // Add conditionals for specific game parameters
+              if (gameName == 'memory-match') {
                 int? timeTaken = game['timeTaken'];
                 int? trials = game['trials'];
                 int? correctGuesses = game['correctGuesses'];
                 int? wrongGuesses = game['wrongGuesses'];
-                double? progress = game['progress'];
-                bool? gameOver = game['gameOver'];
-                String? level = game['level'];
-                String? secondsLeft = game['secondsLeft'];
-                String? figurePath = game['figurePath'];
-                bool? isTracing = game['isTracing'];
-
-                // Create a GameData object for each game
-                historicalData.add(
+                // Create a GameData object for memory match
+                memoryMatchData.add(
                   GameData(
                     gameName: gameName,
                     score: score,
-                    param1: param1,
-                    param2: param2,
-                    param3: param3,
+                    progress: progress,
+                    gameOver: gameOver,
                     timeTaken: timeTaken,
                     trials: trials,
                     correctGuesses: correctGuesses,
                     wrongGuesses: wrongGuesses,
+                    level: level,
+                    secondsLeft: secondsLeft,
+                    figurePath: figurePath,
+                    isTracing: isTracing,
+                  ),
+                );
+              } else if (gameName == 'sound-matching') {
+                String? param1 = game['param1'];
+                String? param2 = game['param2'];
+                String? param3 = game['param3'];
+                // Create a GameData object for sound matching
+                soundMatchingData.add(
+                  GameData(
+                    gameName: gameName,
+                    score: score,
+                    progress: progress,
+                    gameOver: gameOver,
+                    param1: param1,
+                    param2: param2,
+                    param3: param3,
+                    level: level,
+                    secondsLeft: secondsLeft,
+                    figurePath: figurePath,
+                    isTracing: isTracing,
+                  ),
+                );
+              } else if (gameName == 'trace-path') {
+                // Create a GameData object for trace the path
+                traceThePathData.add(
+                  GameData(
+                    gameName: gameName,
+                    score: score,
                     progress: progress,
                     gameOver: gameOver,
                     level: level,
@@ -138,8 +164,10 @@ class _ProgressTrackingState extends State<ProgressTracking> {
                     isTracing: isTracing,
                   ),
                 );
-              });
+              }
             });
+            // Update the UI after fetching data
+            setState(() {});
           } else {
             // Handle error if request fails
             print('Failed to load data: ${gameDetailsResponse.statusCode}');
@@ -161,10 +189,10 @@ class _ProgressTrackingState extends State<ProgressTracking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Progress Tracking'),
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.yellow[200],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -172,131 +200,65 @@ class _ProgressTrackingState extends State<ProgressTracking> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Historical Data Box
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(10.0),
+              // Memory Match Chart
+              if (memoryMatchData.isNotEmpty)
+                _buildGameChart(
+                  gameName: 'memory-match',
+                  gameData: memoryMatchData,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Historical Data',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
-                    ),
-                    SizedBox(height: 8.0),
-                    SfCartesianChart(
-                      primaryXAxis: CategoryAxis(),
-                      series: <LineSeries<GameData, String>>[
-                        LineSeries<GameData, String>(
-                          dataSource: historicalData,
-                          xValueMapper: (GameData data, _) => data.gameName,
-                          yValueMapper: (GameData data, _) => data.score,
-                          name: 'Score',
-                          dataLabelSettings: DataLabelSettings(isVisible: true),
-                          color: Colors.green[200],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(height: 20),
-              // Parameters of Last 5 Responses
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(10.0),
+              // Sound Matching Chart
+              if (soundMatchingData.isNotEmpty)
+                _buildGameChart(
+                  gameName: 'sound-matching',
+                  gameData: soundMatchingData,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Parameters of Last 5 Responses',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
-                    ),
-                    SizedBox(height: 8.0),
-                    // Display parameters here
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: historicalData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        GameData gameData = historicalData[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Game: ${gameData.gameName}',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            Text(
-                              'Score: ${gameData.score}',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            if (gameData.timeTaken != null)
-                              Text(
-                                'Time Taken: ${gameData.timeTaken}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.trials != null)
-                              Text(
-                                'Trials: ${gameData.trials}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.correctGuesses != null)
-                              Text(
-                                'Correct Guesses: ${gameData.correctGuesses}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.wrongGuesses != null)
-                              Text(
-                                'Wrong Guesses: ${gameData.wrongGuesses}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.progress != null)
-                              Text(
-                                'Progress: ${gameData.progress}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.gameOver != null)
-                              Text(
-                                'Game Over: ${gameData.gameOver}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.level != null)
-                              Text(
-                                'Level: ${gameData.level}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.secondsLeft != null)
-                              Text(
-                                'Seconds Left: ${gameData.secondsLeft}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.figurePath != null)
-                              Text(
-                                'Figure Path: ${gameData.figurePath}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            if (gameData.isTracing != null)
-                              Text(
-                                'Is Tracing: ${gameData.isTracing}',
-                                // style: TextStyle(color: Colors.white),
-                              ),
-                            SizedBox(height: 8.0),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+              SizedBox(height: 20),
+              // Trace The Path Chart
+              if (traceThePathData.isNotEmpty)
+                _buildGameChart(
+                  gameName: 'trace-path',
+                  gameData: traceThePathData,
                 ),
-              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGameChart({
+    required String gameName,
+    required List<GameData> gameData,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$gameName Progress',
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
+          ),
+          SizedBox(height: 8.0),
+          SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            series: <LineSeries<GameData, String>>[
+              LineSeries<GameData, String>(
+                dataSource: gameData,
+                xValueMapper: (GameData data, _) => data.progress.toString(),
+                yValueMapper: (GameData data, _) => data.score,
+                name: 'Score',
+                dataLabelSettings: DataLabelSettings(isVisible: true),
+                color: Colors.green[200],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

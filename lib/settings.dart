@@ -11,8 +11,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  String _username = 'Saumya';
-  String _email = 'Saumya@example.com';
+  late String _username = ''; // Initialize with an empty string
+  late String _email = ''; // Initialize with an empty string
   String _password = '********'; // Placeholder for password
   late SharedPreferences _prefs;
 
@@ -24,6 +24,27 @@ class _SettingsState extends State<Settings> {
 
   void _initializePreferences() async {
     _prefs = await SharedPreferences.getInstance();
+    _fetchUserProfile(); // Call fetchUserProfile after _prefs is initialized
+  }
+
+  Future<void> _fetchUserProfile() async {
+    final String apiUrl = 'https://occ-therapy-backend.onrender.com/api/user/profile';
+    final String jwtToken = _prefs.getString('jwtToken') ?? '';
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Authorization': 'Bearer $jwtToken'},
+    );
+
+    if (response.statusCode == 200) {
+      final userProfile = json.decode(response.body);
+      setState(() {
+        _username = userProfile['username'];
+        _email = userProfile['email'];
+      });
+    } else {
+      print('Failed to fetch user profile');
+    }
   }
 
   Future<void> _updateUsername(String newUsername) async {
