@@ -220,18 +220,27 @@ class _TraceThePath extends State<TraceThePath> {
     ),
     );
   }
-  bool _checkWinCondition() {
-    if (_level == 1) {
-      // For simplicity, we assume the user wins if the current path matches the figure path.
-      // In a real game, you would implement a more accurate win condition.
-      return _currentPath == _figurePath;
-    } else {
-      // Check if the traced path length is close to the figure path length
-      double figureLength = _measurePathLength(_figurePath);
-      double tracedLength = _measurePathLength(_currentPath);
-      return (tracedLength / figureLength) > 0.8; // 80% similarity threshold
+bool _checkWinCondition() {
+  if (_level == 1) {
+    // For simplicity, we assume the user wins if the current path matches the figure path.
+    // In a real game, you would implement a more accurate win condition.
+    return _currentPath == _figurePath;
+  } else {
+    // Check if the traced path length is close to the figure path length
+    double figureLength = _measurePathLength(_figurePath);
+    double tracedLength = _measurePathLength(_currentPath);
+    bool isWinningConditionMet = (tracedLength / figureLength) > 0.8; // 80% similarity threshold
+
+    if (isWinningConditionMet) {
+      // Reset timer when the player wins
+      seconds = 0;
+      minutes = 0;
     }
+
+    return isWinningConditionMet;
   }
+}
+
 
   double _measurePathLength(Path path) {
     final metrics = path.computeMetrics();
