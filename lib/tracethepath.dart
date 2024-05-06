@@ -58,6 +58,14 @@ class _TraceThePath extends State<TraceThePath> {
     });
   }
 
+
+  void gameOver() {
+    setState(() {
+      _gameOver = true;
+    });
+    saveGameData(0); // Call saveGameData when the game is over
+    // Add logic for displaying "Game Over" screen or transitioning to results
+  }
   void _resetGame() {
     setState(() {
       _currentPath.reset();
@@ -81,6 +89,8 @@ class _TraceThePath extends State<TraceThePath> {
         _accuracyScore = 0;
       } else {
         _gameOver = true;
+        saveGameData(0);
+         timer?.cancel();
         timer?.cancel();
       }
     });
@@ -257,6 +267,12 @@ class _TraceThePath extends State<TraceThePath> {
       // Check if the traced path length is close to the figure path length
       double figureLength = _measurePathLength(_figurePath);
       double tracedLength = _measurePathLength(_currentPath);
+      if ((tracedLength / figureLength) > 0.8) {
+        saveGameData(tracedLength); // Call saveGameData when the user wins
+        return true;
+      } else {
+        return false;
+      }
       double accuracy = (tracedLength / figureLength) * 100;
       _accuracyScore = accuracy.clamp(0, 100);
       return accuracy > 80; // 80% similarity threshold

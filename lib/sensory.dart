@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:audioplayers/src/source.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class SoundMatchingGame extends StatelessWidget {
   @override
@@ -12,7 +14,7 @@ class SoundMatchingGame extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.lightGreen[200],
-          title: Text('Sound Matching Game'),
+          title: Text('Sensory Integration'),
         ),
         body: SoundMatchingGameScreen(),
       ),
@@ -89,21 +91,19 @@ class _SoundMatchingGameScreenState extends State<SoundMatchingGameScreen> {
     });
   }
 
-void checkMatch() {
-  if (selectedSound1.isNotEmpty && selectedSound2.isNotEmpty) {
-    if (selectedSound1 == selectedSound2) {
-      int totalTimeInSeconds = minutes * 60 + seconds;
-      // Call the method to save the game data here if needed
-      saveSoundMatchingGameData(totalTimeInSeconds);
+  void checkMatch() {
+    if (selectedSound1.isNotEmpty && selectedSound2.isNotEmpty) {
+      if (selectedSound1 == selectedSound2) {
+        int totalTimeInSeconds = minutes * 60 + seconds;
+        // Call the method to save the game data here if needed
+        saveSoundMatchingGameData(totalTimeInSeconds);
+      } else {
+        print('No match found!');
+      }
     } else {
-      print('No match found!');
+      print('Please select sounds in both columns to check match.');
     }
-  } else {
-    print('Please select sounds in both columns to check match.');
   }
-}
-
-
 
   Future<void> saveSoundMatchingGameData(int timeTaken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -115,7 +115,8 @@ void checkMatch() {
     }
 
     final response = await http.post(
-      Uri.parse('https://occ-therapy-backend.onrender.com/api/games/sound-matching'),
+      Uri.parse(
+          'https://occ-therapy-backend.onrender.com/api/games/sound-matching'),
       headers: {
         'Authorization': 'Bearer $jwtToken',
         'Content-Type': 'application/json',
@@ -141,6 +142,15 @@ void checkMatch() {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            'Sound Matching Game',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 20),
           Text(
             'Time: $minutes:$seconds',
             style: TextStyle(fontSize: 18, color: Colors.black),
@@ -253,10 +263,31 @@ class SoundOptionCard extends StatelessWidget {
     );
   }
 
-
   void playSound(String sound) async {
-    final player = AudioPlayer();
-    await player.play(AssetSource('assets/sounds/asset_note1.wav'));
-  }
+    String soundFile = ''; // Initialize soundFile variable
 
+    // Assign corresponding sound file based on the selected sound
+    switch (sound) {
+      case 'notes_1':
+        soundFile = 'asset_note1.wav';
+        break;
+      case 'notes_2':
+        soundFile = 'asset_note2.wav';
+        break;
+      case 'notes_3':
+        soundFile = 'asset_note3.wav';
+        break;
+      case 'notes_4':
+        soundFile = 'asset_note4.wav';
+        break;
+      default:
+        // Handle the case where the sound file is not found
+        print('Sound file not found for $sound');
+        return;
+    }
+
+    // Create an AudioPlayer instance and play the sound file
+    final player = AudioPlayer();
+    await player.play('assets/sounds/$soundFile' as Source);
+  }
 }
