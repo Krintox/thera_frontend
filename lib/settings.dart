@@ -13,7 +13,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   late String _username = ''; // Initialize with an empty string
   late String _email = ''; // Initialize with an empty string
-  String _password = '********'; // Placeholder for password
+  String _password = ''; // Placeholder for password
   late SharedPreferences _prefs;
 
   @override
@@ -125,10 +125,10 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Settings'),
-        backgroundColor: Colors.green[300],
+        backgroundColor: Colors.teal[200],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -140,33 +140,33 @@ class _SettingsState extends State<Settings> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             SizedBox(height: 16),
             ListTile(
               title: Text(
                 'Username',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
               subtitle: Text(
                 _username,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.black),
               ),
               trailing: IconButton(
-                icon: Icon(Icons.edit, color: Colors.white),
+                icon: Icon(Icons.edit, color: Colors.black),
                 onPressed: () {
                   // Add logic to edit username
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      backgroundColor: Colors.grey[800],
-                      title: Text('Change Username', style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.teal[100],
+                      title: Text('Change Username', style: TextStyle(color: Colors.black)),
                       content: TextField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           hintText: 'Enter new username',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.black),
                         ),
                         onChanged: (value) {
                           // Update username
@@ -176,7 +176,7 @@ class _SettingsState extends State<Settings> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                          child: Text('Cancel', style: TextStyle(color: Colors.black)),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -184,7 +184,7 @@ class _SettingsState extends State<Settings> {
                             await _updateUsername(_username);
                             Navigator.pop(context);
                           },
-                          child: Text('Save', style: TextStyle(color: Colors.green[200])),
+                          child: Text('Save', style: TextStyle(color: Colors.black)),
                         ),
                       ],
                     ),
@@ -192,30 +192,30 @@ class _SettingsState extends State<Settings> {
                 },
               ),
             ),
-            Divider(color: Colors.grey[600]),
+            Divider(color: Colors.teal[100]),
             ListTile(
               title: Text(
                 'Email',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
               subtitle: Text(
                 _email,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.black),
               ),
               trailing: IconButton(
-                icon: Icon(Icons.edit, color: Colors.white),
+                icon: Icon(Icons.edit, color: Colors.black),
                 onPressed: () {
                   // Add logic to edit email
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      backgroundColor: Colors.grey[800],
-                      title: Text('Change Email', style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.teal[100],
+                      title: Text('Change Email', style: TextStyle(color: Colors.black)),
                       content: TextField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           hintText: 'Enter new email',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.black),
                         ),
                         onChanged: (value) {
                           // Update email
@@ -225,7 +225,7 @@ class _SettingsState extends State<Settings> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                          child: Text('Cancel', style: TextStyle(color: Colors.black)),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -233,7 +233,7 @@ class _SettingsState extends State<Settings> {
                             await _updateEmail(_email);
                             Navigator.pop(context);
                           },
-                          child: Text('Save', style: TextStyle(color: Colors.green[200])),
+                          child: Text('Save', style: TextStyle(color: Colors.black)),
                         ),
                       ],
                     ),
@@ -241,30 +241,30 @@ class _SettingsState extends State<Settings> {
                 },
               ),
             ),
-            Divider(color: Colors.grey[600]),
+            Divider(color: Colors.teal[200]),
             ListTile(
               title: Text(
                 'Password',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
               subtitle: Text(
                 _password,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.black),
               ),
               trailing: IconButton(
-                icon: Icon(Icons.edit, color: Colors.white),
+                icon: Icon(Icons.edit, color: Colors.black),
                 onPressed: () {
                   // Add logic to edit password
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      backgroundColor: Colors.grey[800],
-                      title: Text('Change Password', style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.teal[100],
+                      title: Text('Change Password', style: TextStyle(color: Colors.black)),
                       content: TextField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           hintText: 'Enter new password',
-                          hintStyle: TextStyle(color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.black),
                         ),
                         onChanged: (value) {
                           // Update password
@@ -274,7 +274,7 @@ class _SettingsState extends State<Settings> {
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                          child: Text('Cancel', style: TextStyle(color: Colors.black)),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -282,7 +282,7 @@ class _SettingsState extends State<Settings> {
                             await _updatePassword(_password);
                             Navigator.pop(context);
                           },
-                          child: Text('Save', style: TextStyle(color: Colors.green[200])),
+                          child: Text('Save', style: TextStyle(color: Colors.black)),
                         ),
                       ],
                     ),

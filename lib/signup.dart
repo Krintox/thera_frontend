@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.blueGrey[100],
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -67,8 +67,6 @@ class _SignUpState extends State<SignUp> {
               SizedBox(height: 20.0),
               _buildPhoneNumberField(context),
               SizedBox(height: 20.0),
-              _buildRememberMeCheckBox(context),
-              SizedBox(height: 20.0),
               _buildSignUpButton(context),
             ],
           ),
@@ -80,12 +78,12 @@ class _SignUpState extends State<SignUp> {
   Widget _buildUsernameField(BuildContext context) {
     return TextFormField(
       controller: _usernameController,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: 'Username',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: Colors.black),
         ),
       ),
     );
@@ -94,12 +92,12 @@ class _SignUpState extends State<SignUp> {
   Widget _buildEmailField(BuildContext context) {
     return TextFormField(
       controller: _emailController,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: 'Email',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: Colors.black),
         ),
       ),
     );
@@ -109,12 +107,12 @@ class _SignUpState extends State<SignUp> {
     return TextFormField(
       controller: _passwordController,
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: 'Password',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: Colors.black),
         ),
       ),
     );
@@ -123,37 +121,17 @@ class _SignUpState extends State<SignUp> {
   Widget _buildPhoneNumberField(BuildContext context) {
     return TextFormField(
       controller: _phoneNumberController,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: 'Phone Number',
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: Colors.black),
         ),
       ),
     );
   }
 
-  Widget _buildRememberMeCheckBox(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-          value: _rememberMe,
-          onChanged: (value) {
-            setState(() {
-              _rememberMe = value!;
-            });
-          },
-          checkColor: Colors.white,
-          fillColor: MaterialStateProperty.all<Color>(Colors.green[100]!),
-        ),
-        Text(
-          'Remember me',
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
-    );
-  }
 
   Widget _buildSignUpButton(BuildContext context) {
     return Container(
@@ -164,18 +142,18 @@ class _SignUpState extends State<SignUp> {
         border: _isPressed
             ? null
             : Border.all(
-                color: Colors.green[100]!,
-                width: 2.0,
-              ),
+          color: Colors.purple[200]!,
+          width: 2.0,
+        ),
         boxShadow: _isPressed
             ? [
-                BoxShadow(
-                  color: Colors.green[100]!.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: Offset(0, 2), // changes position of shadow
-                ),
-              ]
+          BoxShadow(
+            color: Colors.purple[200]!.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ]
             : [],
       ),
       child: OutlinedButton(
@@ -203,7 +181,7 @@ class _SignUpState extends State<SignUp> {
           child: Text(
             'Sign Up',
             style: TextStyle(
-              color: _isPressed ? Colors.white : Colors.white!,
+              color: _isPressed ? Colors.black : Colors.black!,
             ),
           ),
         ),
@@ -214,10 +192,10 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
           side: MaterialStateProperty.all<BorderSide>(
-            BorderSide(color: Colors.green[100]!, width: 2.0),
+            BorderSide(color: Colors.purple[200]!, width: 2.0),
           ),
           backgroundColor: _isPressed
-              ? MaterialStateProperty.all<Color>(Colors.green[100]!)
+              ? MaterialStateProperty.all<Color>(Colors.purple[200]!)
               : MaterialStateProperty.all<Color>(Colors.transparent),
           foregroundColor: MaterialStateProperty.all<Color>(
             _isPressed ? Colors.white : Colors.white,

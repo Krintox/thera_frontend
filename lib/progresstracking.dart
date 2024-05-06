@@ -203,21 +203,21 @@ class _ProgressTrackingState extends State<ProgressTracking> {
               // Memory Match Chart
               if (memoryMatchData.isNotEmpty)
                 _buildGameChart(
-                  gameName: 'memory-match',
+                  gameName: 'Memory Match',
                   gameData: memoryMatchData,
                 ),
               SizedBox(height: 20),
               // Sound Matching Chart
               if (soundMatchingData.isNotEmpty)
                 _buildGameChart(
-                  gameName: 'sound-matching',
+                  gameName: 'Sound Matching',
                   gameData: soundMatchingData,
                 ),
               SizedBox(height: 20),
               // Trace The Path Chart
               if (traceThePathData.isNotEmpty)
                 _buildGameChart(
-                  gameName: 'trace-path',
+                  gameName: 'Trace The Path',
                   gameData: traceThePathData,
                 ),
             ],
@@ -227,39 +227,40 @@ class _ProgressTrackingState extends State<ProgressTracking> {
     );
   }
 
+
   Widget _buildGameChart({
     required String gameName,
     required List<GameData> gameData,
   }) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.grey[800],
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$gameName Progress',
-            style: TextStyle(color: Colors.white, fontSize: 18.0),
-          ),
-          SizedBox(height: 8.0),
-          SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            series: <LineSeries<GameData, String>>[
-              LineSeries<GameData, String>(
-                dataSource: gameData,
-                xValueMapper: (GameData data, _) => data.progress.toString(),
-                yValueMapper: (GameData data, _) => data.score,
-                name: 'Score',
-                dataLabelSettings: DataLabelSettings(isVisible: true),
-                color: Colors.green[200],
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$gameName Progress',
+                style: TextStyle(color: Colors.white, fontSize: 18.0),
+              ),
+              SizedBox(height: 8.0),
+              SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                series: <LineSeries<GameData, String>>[
+                  LineSeries<GameData, String>(
+                    dataSource: gameData,
+                    xValueMapper: (GameData data, _) => data.progress.toString(),
+                    yValueMapper: (GameData data, _) => data.score,
+                    name: 'Score',
+                    dataLabelSettings: DataLabelSettings(isVisible: true),
+                    color: Colors.green[200],
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
+            ),
+        );
+    }
 }

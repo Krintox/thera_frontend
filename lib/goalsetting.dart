@@ -37,7 +37,7 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.green[100],
-          title: Text('Woohoo, you\'re done for the day!'),
+          title: Text('you\'re done for the day!'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -54,10 +54,10 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Goal Setting'),
-        backgroundColor: Colors.green[300],
+        backgroundColor: Colors.deepPurple[200],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -66,19 +66,19 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
           children: [
             TextField(
               controller: goalController,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 hintText: 'Enter your goal',
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: TextStyle(color: Colors.black),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.add, color: Colors.white),
+                  icon: Icon(Icons.add, color: Colors.black),
                   onPressed: addGoal,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[200]!),
+                  borderSide: BorderSide(color: Colors.deepPurple[200]!),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[200]!),
+                  borderSide: BorderSide(color: Colors.deepPurple[200]!),
                 ),
               ),
             ),
@@ -88,7 +88,7 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             SizedBox(height: 8.0),
@@ -102,7 +102,7 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
-                      child: Icon(Icons.delete, color: Colors.white),
+                      child: Icon(Icons.delete, color: Colors.black),
                     ),
                     child: ListTile(
                       leading: Checkbox(
@@ -115,19 +115,14 @@ class _GoalSettingPageState extends State<GoalSettingPage> {
                             }
                           });
                         },
-                        checkColor: Colors.white,
-                        activeColor: Colors.green[100],
+                        checkColor: Colors.black,
+                        activeColor: Colors.deepPurple[200],
                       ),
                       title: Text(
                         goalsList[index]['goal'],
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.check, color: Colors.green[200]),
-                        onPressed: () {
-                          // Add logic to mark goal as completed
-                        },
-                      ),
+
                     ),
                   );
                 },

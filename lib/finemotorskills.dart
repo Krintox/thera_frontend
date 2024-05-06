@@ -22,12 +22,16 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Fine Motor Skills'),
-        backgroundColor: Colors.green[300],
+        title: Text('Fine Motor Skills',
+        style: TextStyle(
+          color: Colors.white,
+        ),),
+        backgroundColor: Colors.pink[100],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,
+              color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop(); // Navigate back to previous screen
           },
@@ -41,7 +45,7 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
             // Exercises Dropdown
             Text(
               'Exercises',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
             SizedBox(height: 8.0),
             DropdownButtonFormField<String>(
@@ -59,16 +63,16 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
               }).toList(),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[800],
+                fillColor: Colors.pink[100],
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[200]!),
+                  borderSide: BorderSide(color: Colors.pink[100]!),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[200]!),
+                  borderSide: BorderSide(color: Colors.pink[100]!),
                 ),
               ),
-              style: TextStyle(color: Colors.white),
-              dropdownColor: Colors.grey[800],
+              style: TextStyle(color: Colors.black),
+              dropdownColor: Colors.pink[100],
             ),
             SizedBox(height: 16.0),
             // Video Placeholder
@@ -76,7 +80,7 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
               Container(
                 padding: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[800],
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: SingleChildScrollView(
@@ -87,11 +91,11 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
                       Container(
                         width: 200,
                         height: 200, // Square box
-                        color: Colors.grey[700],
+                        color: Colors.pink[100],
                         child: Center(
                           child: Text(
                             'Video Placeholder',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
@@ -101,40 +105,8 @@ class _FineMotorSkillsState extends State<FineMotorSkills> {
               ),
             SizedBox(height: 16.0),
             // Spacer to push the button to the end
-            Spacer(),
-            // Game Button
-            _buildGameButton(context),
+            Spacer()
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGameButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TraceThePath()),
-        );
-      },
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.green[200]!),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            side: BorderSide(color: Colors.green[200]!, width: 2.0),
-          ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          'Play Game',
-          style: TextStyle(
-            fontSize: 16.0,
-            color: Colors.white,
-          ),
         ),
       ),
     );
