@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
 void main() {
-  runApp(TraceThePath());
+  runApp(MaterialApp(
+    home: TraceThePath(),
+  ));
 }
 
 class TraceThePath extends StatefulWidget {
@@ -24,6 +26,7 @@ class _TraceThePath extends State<TraceThePath> {
   int seconds = 0;
   int minutes = 0;
   int _secondsLeft = 0; // Change as needed
+  bool _instructionsShown = false;
   late SharedPreferences _prefs;
   double _accuracyScore = 0;
 
@@ -36,6 +39,17 @@ class _TraceThePath extends State<TraceThePath> {
     _initializePreferences();
   }
 
+    @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_instructionsShown) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _showInstructions(context);
+      });
+      _instructionsShown = true;
+    }
+  }
+
   void _initializePreferences() async {
     _prefs = await SharedPreferences.getInstance();
   }
@@ -45,8 +59,8 @@ class _TraceThePath extends State<TraceThePath> {
     timer?.cancel();
     super.dispose();
   }
-
-  void _startTimer() {
+  
+ void _startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         seconds++;
@@ -58,14 +72,15 @@ class _TraceThePath extends State<TraceThePath> {
     });
   }
 
-
-  void gameOver() {
+ void gameOver() {
     setState(() {
       _gameOver = true;
+      timer?.cancel();
     });
     saveGameData(0); // Call saveGameData when the game is over
     // Add logic for displaying "Game Over" screen or transitioning to results
   }
+  
   void _resetGame() {
     setState(() {
       _currentPath.reset();
@@ -78,23 +93,35 @@ class _TraceThePath extends State<TraceThePath> {
     });
   }
 
-  void _nextLevel() {
-    setState(() {
-      if (_level < 4) {
-        _level++;
-        _currentPath.reset();
-        _figurePath = _generateFigure(_level);
-        seconds = 0;
-        minutes = 0;
-        _accuracyScore = 0;
-      } else {
-        _gameOver = true;
+ bool _canProceedToNextLevel = false; // Add this line
+
+void _nextLevel() {
+  setState(() {
+    if (_level < 4) {
+      _canProceedToNextLevel = true; // Allow proceeding to the next level
+      _level++; // Increment the level
+      _currentPath.reset();
+      _figurePath = _generateFigure(_level);
+      seconds = 0;
+      minutes = 0;
+    } else {
+      _canProceedToNextLevel = true; // Allow proceeding to game over
+      gameOver();
         saveGameData(0);
          timer?.cancel();
         timer?.cancel();
       }
     });
+  
+    if (_level <= 4) {
+    // Wait for 3 seconds before allowing the next level
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _canProceedToNextLevel = false; // Reset the flag after the delay
+      });
+    });
   }
+}
 
   void _prevLevel() {
     setState(() {
@@ -109,13 +136,14 @@ class _TraceThePath extends State<TraceThePath> {
     });
   }
 
-  void _showInstructions() {
+  void _showInstructions(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Instructions'),
-          content: Text('Trace the path shown on the screen. Accuracy will be scored on a scale of 1-100.'),
+          title: Text(' Game Instructions'),
+          content: Text(
+              'Trace the path shown on the screen. Accuracy will be scored on a scale of 1-100.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -164,9 +192,14 @@ class _TraceThePath extends State<TraceThePath> {
 
   @override
   Widget build(BuildContext context) {
+    String appBarTitle = 'Trace the Path - Level $_level';
+    if (_gameOver) {
+      appBarTitle += ' - Average Score: ${_averageScore.toStringAsFixed(2)}%';
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trace the Path - Level $_level'),
+        title: Text(appBarTitle),
         backgroundColor: Colors.yellow[100],
         actions: [
           IconButton(
@@ -175,81 +208,79 @@ class _TraceThePath extends State<TraceThePath> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
         children: [
-          Expanded(
-            child: GestureDetector(
-              onPanStart: (details) {
-                setState(() {
-                  _isTracing = true;
-                  _currentPath.moveTo(
-                    details.localPosition.dx,
-                    details.localPosition.dy,
-                  );
-                });
-              },
-              onPanUpdate: (details) {
-                if (_isTracing) {
-                  setState(() {
-                    _currentPath.lineTo(
-                      details.localPosition.dx,
-                      details.localPosition.dy,
-                    );
-                  });
-                }
-              },
-              onPanEnd: (details) {
-                setState(() {
-                  _isTracing = false;
-                  if (_checkWinCondition()) {
-                    _nextLevel();
-                  }
-                });
-              },
-              child: CustomPaint(
-                painter: SymbolPainter(
-                  symbolPath: _figurePath,
-                  tracePath: _currentPath,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onPanStart: (details) {
+                    setState(() {
+                      _isTracing = true;
+                      _currentPath.moveTo(
+                        details.localPosition.dx,
+                        details.localPosition.dy,
+                      );
+                    });
+                  },
+                  onPanUpdate: (details) {
+                    if (_isTracing) {
+                      setState(() {
+                        _currentPath.lineTo(
+                          details.localPosition.dx,
+                          details.localPosition.dy,
+                        );
+                      });
+                    }
+                  },
+                  onPanEnd: (details) {
+  setState(() {
+    _isTracing = false;
+    if (_checkWinCondition() && _canProceedToNextLevel) { // Check the flag here
+      _canProceedToNextLevel = false; // Reset the flag
+      _nextLevel();
+    }
+  });
+},
+
+                  child: CustomPaint(
+                    painter: SymbolPainter(
+                      symbolPath: _figurePath,
+                      tracePath: _currentPath,
+                    ),
+                    size: Size.infinite,
+                  ),
                 ),
-                size: Size.infinite,
               ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            color: Colors.grey[300],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+              Container(
+                padding: EdgeInsets.all(16),
+                color: Colors.grey[300],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                      onPressed: _prevLevel,
-                      child: Text('Prev Level'),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: _prevLevel,
+                          child: Text('Prev Level'),
+                        ),
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: _nextLevel,
+                          child: Text('Next Level'),
+                        ),
+                        SizedBox(width: 16),
+                      ],
                     ),
-                    SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: _nextLevel,
-                      child: Text('Next Level'),
-                    ),
-                    SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: _showInstructions,
-                      child: Text('Instructions'),
+                    Text(
+                      'Time: $minutes:$seconds',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
-                Text(
-                  'Time: $minutes:$seconds',
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  'Accuracy: ${_accuracyScore.toStringAsFixed(2)}%',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -257,26 +288,25 @@ class _TraceThePath extends State<TraceThePath> {
   }
 
   bool _checkWinCondition() {
+    double accuracy = 0;
+
     if (_level == 1) {
       // For simplicity, we assume the user wins if the current path matches the figure path.
       // In a real game, you would implement a more accurate win condition.
       bool isMatching = _currentPath == _figurePath;
-      _accuracyScore = isMatching ? 100 : 0;
-      return isMatching;
+      accuracy = isMatching ? 100 : 0;
     } else {
       // Check if the traced path length is close to the figure path length
       double figureLength = _measurePathLength(_figurePath);
       double tracedLength = _measurePathLength(_currentPath);
-      if ((tracedLength / figureLength) > 0.8) {
-        saveGameData(tracedLength); // Call saveGameData when the user wins
-        return true;
-      } else {
-        return false;
-      }
-      double accuracy = (tracedLength / figureLength) * 100;
-      _accuracyScore = accuracy.clamp(0, 100);
-      return accuracy > 80; // 80% similarity threshold
+
+      accuracy = (tracedLength / figureLength) * 100;
     }
+
+    _levelScores[_level] = accuracy;
+    _totalScore += accuracy;
+
+    return accuracy > 80; // 80% similarity threshold
   }
 
   double _measurePathLength(Path path) {
@@ -317,7 +347,7 @@ class _TraceThePath extends State<TraceThePath> {
 
   Path _generateQuadraticBezierWithLineAndStud() {
     Path path = Path();
-// Move to the starting point
+    // Move to the starting point
     path.moveTo(50, 150);
 
     // Add quadratic bezier curve
@@ -357,16 +387,12 @@ class _TraceThePath extends State<TraceThePath> {
 
     return path;
   }
-}
 
-// Function to calculate the length of a path
-double calculatePathLength(Path path) {
-  final metrics = path.computeMetrics();
-  double length = 0.0;
-  for (final metric in metrics) {
-    length += metric.length;
+  void _calculateAverageScore() {
+    if (_levelScores.isNotEmpty) {
+      _averageScore = _totalScore / _levelScores.length;
+    }
   }
-  return length;
 }
 
 class SymbolPainter extends CustomPainter {
@@ -394,6 +420,5 @@ class SymbolPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
-    }
+  }
 }
-
