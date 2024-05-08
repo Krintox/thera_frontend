@@ -39,16 +39,18 @@ class _CognitiveAbilitiesState extends State<CognitiveAbilities> {
   int minutes = 0;
   bool showInstructions = false; // Track if instructions dialog should be shown
 
-  @override
-  void initState() {
-    super.initState();
-    shuffledEmojis = emojis.toList()
-      ..shuffle();
-    cardFlips = List<bool>.filled(emojis.length, false);
-    selectedIndex = null;
-    startTimer();
+@override
+void initState() {
+  super.initState();
+  shuffledEmojis = emojis.toList()..shuffle();
+  cardFlips = List<bool>.filled(emojis.length, false);
+  selectedIndex = null;
+  startTimer();
+  WidgetsBinding.instance!.addPostFrameCallback((_) {
     showInstructionsDialog(context);
-  }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
